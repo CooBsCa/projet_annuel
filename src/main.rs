@@ -1,8 +1,9 @@
+use api::server::start_server;
 use dotenv::dotenv;
-use entity::app_user;
-use sea_orm::ActiveModelTrait;
-use sea_orm::ActiveValue::Set;
+use migration::{Migrator, MigratorTrait};
 use sea_orm::Database;
+
+pub mod api;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -10,12 +11,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db_string = std::env::var("DATABASE_URL").expect("set DATABASE_URL env variable");
     let db = Database::connect(db_string).await.unwrap();
 
-    let user_to_insert = app_user::ActiveModel {
-        username: Set("John Doe".to_owned()),
-        email: Set("johnDoe@gmail.com".to_owned()),
-        ..Default::default()
-    };
+    Migrator::up(&db, None).await.unwrap();
+    start_server().await;
+    // let user_to_insert = app_user::ActiveModel {
+    //     username: Set("John Doe".to_owned()),
+    //     email: Set("johnDoe@gmail.com".to_owned()),
+    //     ..Default::default()
+    // };
 
-    user_to_insert.insert(&db).await.unwrap();
+    // user_to_insert.insert(&db).await.unwrap();
     Ok(())
 }
