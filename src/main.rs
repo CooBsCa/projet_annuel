@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Migrator::up(&db, None).await.unwrap();
 
     //Start http server
-    start_server().await;
+    start_server(db).await;
     // let user_to_insert = app_user::ActiveModel {
     //     username: Set("John Doe".to_owned()),
     //     email: Set("johnDoe@gmail.com".to_owned()),
