@@ -1,6 +1,8 @@
 use axum::Router;
 use sea_orm::DbConn;
 
+use crate::api::state::AppState;
+
 use super::users::users_router::get_users_router;
 
 /// Start axum http server
@@ -15,9 +17,4 @@ pub async fn start_server(db: DbConn) {
 
 fn get_router() -> Router<AppState> {
     Router::new().merge(get_users_router())
-}
-
-#[derive(Clone)]
-pub struct AppState {
-    db: DbConn,
 }

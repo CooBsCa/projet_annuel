@@ -1,6 +1,6 @@
 use axum::{routing::get, Router};
 
-use crate::api::server::AppState;
+use crate::api::state::AppState;
 
 use super::users_handler;
 
