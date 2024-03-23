@@ -11,7 +11,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db_string = std::env::var("DATABASE_URL").expect("set DATABASE_URL env variable");
     let db = Database::connect(db_string).await.unwrap();
 
+    // Run the migration
     Migrator::up(&db, None).await.unwrap();
+
+    //Start http server
     start_server().await;
     // let user_to_insert = app_user::ActiveModel {
     //     username: Set("John Doe".to_owned()),
