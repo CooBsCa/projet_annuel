@@ -4,6 +4,7 @@ use migration::{Migrator, MigratorTrait};
 use sea_orm::Database;
 
 pub mod api;
+pub mod services;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

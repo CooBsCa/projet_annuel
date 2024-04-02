@@ -9,6 +9,7 @@ edition = "2021"
 members = [".", "entity", "migration"]
 
 [dependencies]
+anyhow = "1.0.81"
 axum = "0.7.4"
 dotenv = "0.15.0"
 entity = { path = "entity" }
