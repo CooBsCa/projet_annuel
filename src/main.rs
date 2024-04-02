@@ -4,6 +4,7 @@ use migration::{Migrator, MigratorTrait};
 use sea_orm::Database;
 
 pub mod api;
+pub mod dto;
 pub mod services;
 
 #[tokio::main]

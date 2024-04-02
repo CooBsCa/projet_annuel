@@ -9,10 +9,14 @@ edition = "2021"
 members = [".", "entity", "migration"]
 
 [dependencies]
+utoipa = { version = "4.2.0", features = ["axum_extras", "preserve_order"] }
 anyhow = "1.0.81"
 axum = "0.7.4"
 dotenv = "0.15.0"
-entity = { path = "entity" }
 migration = { path = "migration" }
 sea-orm = "0.12"
 tokio = { version = "1.0", features = ["full"] }
+utoipauto = "0.1.10"
+utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
+serde = { version = "1.0.197", features = ["derive"] }
+entity = { path = "entity" }
