@@ -62,7 +62,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Zone {
+pub enum Zone {
     Table,
     Id,
     Name,

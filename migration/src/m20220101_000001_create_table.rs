@@ -33,7 +33,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum AppUser {
+pub enum AppUser {
     Table,
     Id,
     Username,
