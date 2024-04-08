@@ -1,6 +1,11 @@
+extern crate bcrypt;
+
+use bcrypt::{hash, verify, BcryptError, DEFAULT_COST};
 use entity::app_user::{self};
 use sea_orm::{ActiveModelTrait, TryIntoModel};
 use sea_orm::{DbConn, EntityTrait, Set};
+use utoipa::openapi::request_body::RequestBody;
+use utoipa::openapi::security::Password;
 
 use crate::dto::app_user::CreateUserDto;
 
@@ -12,10 +17,11 @@ pub async fn create_user(
     db: &DbConn,
     create_user_dto: CreateUserDto,
 ) -> Result<app_user::Model, anyhow::Error> {
+    let hashed = hash(create_user_dto.password, DEFAULT_COST).unwrap();
     let usr = app_user::ActiveModel {
         username: Set(create_user_dto.username),
         email: Set(create_user_dto.email),
-        password: Set(create_user_dto.password),
+        password: Set(hashed),
         ..Default::default()
     };
     let active = usr.save(db).await?;
