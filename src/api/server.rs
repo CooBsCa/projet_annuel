@@ -6,7 +6,10 @@ use utoipauto::utoipauto;
 
 use crate::api::state::AppState;
 
-use super::{auth::auth_router::get_auth_router, users::users_router::get_users_router};
+use super::{
+    auth::auth_router::get_auth_router, club::club_router::get_clubs_router,
+    users::users_router::get_users_router,
+};
 
 /// Start axum http server
 pub async fn start_server(db: DbConn) {
@@ -23,6 +26,7 @@ fn get_router() -> Router<AppState> {
     Router::new()
         .merge(get_users_router())
         .merge(get_auth_router())
+        .merge(get_clubs_router())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
