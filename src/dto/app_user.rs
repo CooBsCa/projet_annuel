@@ -18,3 +18,10 @@ impl From<app_user::Model> for AppUserDto {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct CreateUserDto {
+    pub username: String,
+    pub email: String,
+    pub password: String,
+}
