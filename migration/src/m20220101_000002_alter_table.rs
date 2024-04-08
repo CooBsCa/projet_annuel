@@ -28,10 +28,8 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 enum AppUser {
     Table,
-    Id,
-    Username,
-    Email,
     Password,
+    #[allow(non_camel_case_types)]
     Password_Len,
     Salt,
 }
