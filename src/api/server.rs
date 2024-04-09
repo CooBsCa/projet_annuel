@@ -8,7 +8,8 @@ use crate::api::state::AppState;
 
 use super::{
     auth::auth_router::get_auth_router, club::club_router::get_clubs_router,
-    users::users_router::get_users_router, zone::zone_router::get_zone_router,
+    slot::slot_router::get_slot_router, users::users_router::get_users_router,
+    zone::zone_router::get_zone_router,
 };
 
 /// Start axum http server
@@ -28,6 +29,7 @@ fn get_router() -> Router<AppState> {
         .merge(get_auth_router())
         .merge(get_clubs_router())
         .merge(get_zone_router())
+        .merge(get_slot_router())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
