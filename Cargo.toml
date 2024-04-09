@@ -21,3 +21,4 @@ utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
 serde = { version = "1.0.197", features = ["derive"] }
 entity = { path = "entity" }
 bcrypt = "0.15"
+chrono = "0.4.37"
