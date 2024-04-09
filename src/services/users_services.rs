@@ -1,11 +1,11 @@
 extern crate bcrypt;
 
-use bcrypt::{hash, verify, BcryptError, DEFAULT_COST};
+use bcrypt::{hash, DEFAULT_COST};
 use entity::app_user::{self};
 use sea_orm::{ActiveModelTrait, TryIntoModel};
 use sea_orm::{DbConn, EntityTrait, Set};
-use utoipa::openapi::request_body::RequestBody;
-use utoipa::openapi::security::Password;
+
+
 
 use crate::dto::app_user::CreateUserDto;
 

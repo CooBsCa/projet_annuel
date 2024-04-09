@@ -20,9 +20,4 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 enum AppUser {
     Table,
-    Id,
-    Username,
-    Email,
-    Password,
-    Salt,
 }
