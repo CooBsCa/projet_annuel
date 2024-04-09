@@ -21,9 +21,13 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Session::User).string().not_null())
-                    .col(ColumnDef::new(Session::Hash).string().not_null())
-                    .col(ColumnDef::new(Session::EndSessionDate).date_time())
+                    .col(ColumnDef::new(Session::UserId).integer().not_null())
+                    .col(ColumnDef::new(Session::Uuid).string().not_null())
+                    .col(
+                        ColumnDef::new(Session::EndSessionDate)
+                            .date_time()
+                            .not_null(),
+                    )
                     .to_owned(),
             )
             .await
@@ -43,7 +47,7 @@ impl MigrationTrait for Migration {
 enum Session {
     Table,
     Id,
-    User,
-    Hash,
+    UserId,
+    Uuid,
     EndSessionDate,
 }
