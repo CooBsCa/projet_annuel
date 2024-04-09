@@ -25,3 +25,9 @@ pub struct CreateUserDto {
     pub email: String,
     pub password: String,
 }
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct LoginUserDto {
+    pub user_login_input: String,
+    pub password: String,
+}
