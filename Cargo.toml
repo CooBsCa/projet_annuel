@@ -9,7 +9,11 @@ edition = "2021"
 members = [".", "entity", "migration"]
 
 [dependencies]
-utoipa = { version = "4.2.0", features = ["axum_extras", "preserve_order"] }
+utoipa = { version = "4.2.0", features = [
+    "axum_extras",
+    "preserve_order",
+    "chrono",
+] }
 anyhow = "1.0.81"
 axum = "0.7.4"
 dotenv = "0.15.0"
@@ -21,4 +25,4 @@ utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
 serde = { version = "1.0.197", features = ["derive"] }
 entity = { path = "entity" }
 bcrypt = "0.15"
-chrono = "0.4.37"
+chrono = { version = "0.4.37", features = ["serde"] }
