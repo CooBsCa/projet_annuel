@@ -1,6 +1,13 @@
-use axum::Router;
+use axum::{http::Method, Router};
 use sea_orm::DbConn;
-use utoipa::OpenApi;
+use tower_http::cors::{Any, CorsLayer};
+use utoipa::{
+    openapi::{
+        self,
+        security::{HttpAuthScheme, HttpBuilder, SecurityScheme},
+    },
+    Modify, OpenApi,
+};
 use utoipa_swagger_ui::SwaggerUi;
 use utoipauto::utoipauto;
 
@@ -24,17 +31,42 @@ pub async fn start_server(db: DbConn) {
 }
 
 fn get_router() -> Router<AppState> {
+    let cors = CorsLayer::new()
+        // allow `GET` and `POST` when accessing the resource
+        .allow_methods([Method::GET, Method::POST])
+        // allow requests from any origin
+        .allow_origin(Any);
+
     Router::new()
         .merge(get_users_router())
         .merge(get_auth_router())
         .merge(get_clubs_router())
         .merge(get_zone_router())
         .merge(get_slot_router())
+        .layer(cors)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
 /// Swagger OpenApi documentation of the API
 #[utoipauto]
 #[derive(OpenApi)]
-#[openapi(info(title = "Open API", version = "1.0.0"))]
+#[openapi(info(title = "Open API", version = "1.0.0"), modifiers(&BearerAuth))]
 pub struct ApiDocs;
+
+pub struct BearerAuth;
+
+impl Modify for BearerAuth {
+    fn modify(&self, openapi: &mut openapi::OpenApi) {
+        if let Some(schema) = openapi.components.as_mut() {
+            schema.add_security_scheme(
+                "BrearerAuth",
+                SecurityScheme::Http(
+                    HttpBuilder::new()
+                        .scheme(HttpAuthScheme::Bearer)
+                        .bearer_format("JWT")
+                        .build(),
+                ),
+            );
+        }
+    }
+}
