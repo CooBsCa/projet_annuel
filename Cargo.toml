@@ -27,3 +27,4 @@ entity = { path = "entity" }
 bcrypt = "0.15"
 chrono = { version = "0.4.37", features = ["serde"] }
 uuid = { version = "1.8.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
+axum-extra = { version = "0.9.3", features = ["typed-header"] }

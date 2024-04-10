@@ -1,4 +1,4 @@
-use axum::Router;
+use axum::{middleware, Router};
 use sea_orm::DbConn;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
@@ -6,16 +6,19 @@ use utoipauto::utoipauto;
 
 use crate::api::state::AppState;
 
+use super::state;
 use super::{
     auth::auth_router::get_auth_router, club::club_router::get_clubs_router,
     slot::slot_router::get_slot_router, users::users_router::get_users_router,
     zone::zone_router::get_zone_router,
 };
 
+use super::super::middleware::auth_middleware;
+
 /// Start axum http server
 pub async fn start_server(db: DbConn) {
     let state = AppState { db };
-    let app = get_router().with_state(state);
+    let app = get_router(state.clone()).with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await.unwrap();
     println!("Server running on port 3001");
@@ -23,13 +26,14 @@ pub async fn start_server(db: DbConn) {
     axum::serve(listener, app).await.unwrap();
 }
 
-fn get_router() -> Router<AppState> {
+fn get_router(state: AppState) -> Router<AppState> {
     Router::new()
         .merge(get_users_router())
-        .merge(get_auth_router())
         .merge(get_clubs_router())
         .merge(get_zone_router())
         .merge(get_slot_router())
+        .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
+        .merge(get_auth_router())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
