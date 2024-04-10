@@ -53,7 +53,7 @@ fn get_router(state: AppState) -> Router<AppState> {
 /// Swagger OpenApi documentation of the API
 #[utoipauto]
 #[derive(OpenApi)]
-#[openapi(info(title = "Open API", version = "1.0.0"), modifiers(&BearerAuth))]
+#[openapi(info(title = "Open API", version = "1.0.0"), modifiers(&BearerAuth), security(["BearerAuth" = ["edit:items", "read:items"]]))]
 pub struct ApiDocs;
 
 pub struct BearerAuth;
@@ -62,7 +62,7 @@ impl Modify for BearerAuth {
     fn modify(&self, openapi: &mut openapi::OpenApi) {
         if let Some(schema) = openapi.components.as_mut() {
             schema.add_security_scheme(
-                "BrearerAuth",
+                "BearerAuth",
                 SecurityScheme::Http(
                     HttpBuilder::new()
                         .scheme(HttpAuthScheme::Bearer)
