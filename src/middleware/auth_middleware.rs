@@ -7,10 +7,10 @@ use axum_extra::{
 };
 use chrono::Local;
 use entity::session;
-use sea_orm::ColumnTrait;
 use sea_orm::DbConn;
 use sea_orm::EntityTrait;
 use sea_orm::QueryFilter;
+use sea_orm::{ColumnTrait, Condition};
 
 pub async fn auth(
     State(db): State<DbConn>,
@@ -32,14 +32,21 @@ pub async fn auth(
 }
 
 async fn token_is_valid(db: DbConn, token: &str) -> bool {
-    if let Some(_) = session::Entity::find()
-        .filter(session::Column::Uuid.eq(token))
-        .filter(session::Column::EndSessionDate.lt(Local::now().naive_local()))
+    println!("{}", token);
+    if let Some(session_found) = session::Entity::find()
+        .filter(
+            Condition::all()
+                .add(session::Column::Uuid.eq(token))
+                .add(session::Column::EndSessionDate.gt(Local::now().naive_local())),
+        )
         .one(&db)
         .await
         .ok()
     {
-        true
+        match session_found {
+            Some(_) => true,
+            None => false,
+        }
     } else {
         false
     }

@@ -42,11 +42,9 @@ pub async fn seach_user(
 ) -> Result<app_user::Model, DbErr> {
     let searched_user = app_user::Entity::find()
         .filter(
-            Condition::all().add(
-                Condition::any()
-                    .add(app_user::Column::Username.eq(&login_user_dto.user_login_input))
-                    .add(app_user::Column::Email.eq(&login_user_dto.user_login_input)),
-            ),
+            Condition::any()
+                .add(app_user::Column::Username.eq(&login_user_dto.user_login_input))
+                .add(app_user::Column::Email.eq(&login_user_dto.user_login_input)),
         )
         .one(db)
         .await?;
