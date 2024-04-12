@@ -35,7 +35,7 @@ pub async fn start_server(db: DbConn) {
 fn get_router(state: AppState) -> Router<AppState> {
     let cors = CorsLayer::new()
         // allow `GET` and `POST` when accessing the resource
-        .allow_methods([Method::GET, Method::POST])
+        .allow_methods(Any)
         // allow requests from any origin
         .allow_origin(Any);
 
