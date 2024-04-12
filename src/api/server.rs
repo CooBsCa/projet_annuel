@@ -44,9 +44,9 @@ fn get_router(state: AppState) -> Router<AppState> {
         .merge(get_clubs_router())
         .merge(get_zone_router())
         .merge(get_slot_router())
-        .layer(cors)
         .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
         .merge(get_auth_router())
+        .layer(cors)
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
