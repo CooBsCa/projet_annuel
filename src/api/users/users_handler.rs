@@ -1,5 +1,5 @@
 use crate::{dto::app_user::AppUserDto, services::users_services};
-use axum::{extract::State, Json};
+use axum::{extract::State, Extension, Json};
 use sea_orm::DbConn;
 
 #[utoipa::path(
@@ -20,4 +20,17 @@ pub async fn get_users(State(db): State<DbConn>) -> Json<Vec<AppUserDto>> {
             .map(AppUserDto::from)
             .collect(),
     )
+}
+
+#[utoipa::path(
+        get,
+        path = "/user",
+        responses(
+            (status = OK, description = "Get current user", body = AppUserDto),
+        ),
+        tag = "Users",
+    )]
+/// Get current user
+pub async fn get_current_user(Extension(user): Extension<AppUserDto>) -> Json<AppUserDto> {
+    Json(user)
 }

@@ -6,21 +6,24 @@ use axum_extra::{
     TypedHeader,
 };
 use chrono::Local;
-use entity::session;
+use entity::{app_user, session};
 use sea_orm::DbConn;
 use sea_orm::EntityTrait;
 use sea_orm::QueryFilter;
 use sea_orm::{ColumnTrait, Condition};
 
+use crate::dto::app_user::AppUserDto;
+
 pub async fn auth(
     State(db): State<DbConn>,
     auth_header: Option<TypedHeader<Authorization<Bearer>>>,
-    request: Request,
+    mut request: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
     match auth_header {
         Some(TypedHeader(header)) => {
-            if token_is_valid(db, header.token()).await {
+            if let Some(usr) = get_user_from_token(db, header.token()).await {
+                request.extensions_mut().insert(usr);
                 let response = next.run(request).await;
                 Ok(response)
             } else {
@@ -31,9 +34,8 @@ pub async fn auth(
     }
 }
 
-async fn token_is_valid(db: DbConn, token: &str) -> bool {
-    println!("{}", token);
-    if let Some(session_found) = session::Entity::find()
+async fn get_user_from_token(db: DbConn, token: &str) -> Option<AppUserDto> {
+    let session = session::Entity::find()
         .filter(
             Condition::all()
                 .add(session::Column::Uuid.eq(token))
@@ -41,13 +43,11 @@ async fn token_is_valid(db: DbConn, token: &str) -> bool {
         )
         .one(&db)
         .await
-        .ok()
-    {
-        match session_found {
-            Some(_) => true,
-            None => false,
-        }
-    } else {
-        false
-    }
+        .ok()??;
+
+    app_user::Entity::find_by_id(session.user_id)
+        .one(&db)
+        .await
+        .ok()?
+        .map(AppUserDto::from)
 }

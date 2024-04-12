@@ -2,7 +2,7 @@ use entity::app_user;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-#[derive(Debug, Serialize, Deserialize, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, ToSchema, Clone)]
 pub struct AppUserDto {
     pub id: i32,
     pub username: String,

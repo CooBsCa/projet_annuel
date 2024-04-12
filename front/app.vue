@@ -20,7 +20,7 @@
 
       <!-- Sidebar Content -->
       <div class="p-4">
-        <h1 class="text-xl font-bold">Sidebar</h1>
+        <h1 class="text-xl font-bold">Current User</h1>
         <!-- Add your sidebar content here -->
       </div>
     </div>
@@ -29,12 +29,11 @@
     <div class="flex flex-col flex-1">
       <!-- Header -->
       <div class="bg-white shadow-md p-4">
-        <h1 class="text-2xl font-bold">Header with a Name</h1>
+        <h1 class="text-2xl font-bold">Club name</h1>
       </div>
 
       <!-- Page Content -->
       <div class="p-4">
-        <h2 class="text-xl font-bold">Page Content</h2>
         <NuxtPage></NuxtPage>
       </div>
     </div>
