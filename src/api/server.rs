@@ -33,12 +33,6 @@ pub async fn start_server(db: DbConn) {
 }
 
 fn get_router(state: AppState) -> Router<AppState> {
-    let cors = CorsLayer::new()
-        // allow `GET` and `POST` when accessing the resource
-        .allow_methods(Any)
-        // allow requests from any origin
-        .allow_origin(Any);
-
     Router::new()
         .merge(get_users_router())
         .merge(get_clubs_router())
@@ -46,7 +40,7 @@ fn get_router(state: AppState) -> Router<AppState> {
         .merge(get_slot_router())
         .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
         .merge(get_auth_router())
-        .layer(cors)
+        .layer(CorsLayer::permissive())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
 }
 
