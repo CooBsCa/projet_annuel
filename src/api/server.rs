@@ -1,4 +1,4 @@
-use axum::{http::Method, middleware, Router};
+use axum::{middleware, Router};
 use sea_orm::DbConn;
 use tower_http::cors::{Any, CorsLayer};
 use utoipa::{

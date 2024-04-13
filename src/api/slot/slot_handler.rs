@@ -1,9 +1,12 @@
-use axum::{extract::State, Json};
+use axum::{extract::State, Extension, Json};
 use sea_orm::DbConn;
 
 use crate::{
     api::api_error::ApiError,
-    dto::slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, SlotDto},
+    dto::{
+        app_user::AppUserDto,
+        slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, SlotDto},
+    },
     services::slot_services,
 };
 
@@ -21,6 +24,26 @@ pub async fn get_available_slots(
 ) -> Result<Json<Vec<SlotDto>>, ApiError> {
     Ok(Json(
         slot_services::get_available_slots(&db, data)
+            .await
+            .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
+            .map_err(|_| ApiError::Internal)?,
+    ))
+}
+
+#[utoipa::path(
+        get,
+        path = "/get-claimed-slots",
+        responses(
+            (status = OK, description = "Get claimed slot for current usr", body = Vec<SlotDto>),
+        ),
+        tag = "Slot",
+    )]
+pub async fn get_claimed_slots(
+    State(db): State<DbConn>,
+    Extension(usr): Extension<AppUserDto>,
+) -> Result<Json<Vec<SlotDto>>, ApiError> {
+    Ok(Json(
+        slot_services::get_claimed_slots(&db, usr.id)
             .await
             .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
             .map_err(|_| ApiError::Internal)?,
