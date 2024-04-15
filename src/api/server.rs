@@ -1,6 +1,6 @@
 use axum::{middleware, Router};
 use sea_orm::DbConn;
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::cors::CorsLayer;
 use utoipa::{
     openapi::{
         self,
