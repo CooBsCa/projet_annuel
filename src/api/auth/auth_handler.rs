@@ -1,8 +1,12 @@
-use axum::{extract::State, Json};
+use axum::{extract::State, http::StatusCode, Json};
 use sea_orm::DbConn;
 
 use crate::{
-    dto::app_user::{AppUserDto, CreateUserDto, LoginUserDto},
+    api::api_error::ApiError,
+    dto::{
+        app_user::{CreateUserDto, LoginUserDto},
+        session::SessionUuidDto,
+    },
     services::users_services,
 };
 
@@ -18,13 +22,11 @@ use crate::{
 pub async fn register_user(
     State(db): State<DbConn>,
     Json(create_user_dto): Json<CreateUserDto>,
-) -> Json<AppUserDto> {
-    Json(
-        users_services::create_user(&db, create_user_dto)
-            .await
-            .unwrap()
-            .into(),
-    )
+) -> Result<StatusCode, ApiError> {
+    let _ = users_services::create_user(&db, create_user_dto)
+        .await
+        .map_err(|_| ApiError::Internal);
+    Ok(StatusCode::CREATED)
 }
 
 #[utoipa::path(
@@ -39,11 +41,9 @@ pub async fn register_user(
 pub async fn login_user(
     State(db): State<DbConn>,
     Json(user_login): Json<LoginUserDto>,
-) -> Json<AppUserDto> {
-    Json(
-        users_services::seach_user(&db, user_login)
-            .await
-            .unwrap()
-            .into(),
-    )
+) -> Result<Json<SessionUuidDto>, ApiError> {
+    let session_uuid = users_services::search_user(&db, user_login)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    Ok(Json(session_uuid.into()))
 }

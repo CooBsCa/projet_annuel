@@ -1,7 +1,8 @@
 extern crate bcrypt;
 
-use bcrypt::{hash, verify, BcryptError, DEFAULT_COST};
+use bcrypt::{hash, verify, DEFAULT_COST};
 use entity::app_user::{self};
+use entity::club::{self};
 use sea_orm::ColumnTrait;
 use sea_orm::Condition;
 use sea_orm::DbErr;
@@ -20,11 +21,19 @@ pub async fn create_user(
     db: &DbConn,
     create_user_dto: CreateUserDto,
 ) -> Result<app_user::Model, anyhow::Error> {
-    let password_hash = hash_password(create_user_dto.password)?;
+    let password_hash = hash(create_user_dto.password, DEFAULT_COST)?;
+    let searched_club = club::Entity::find_by_id(create_user_dto.id_club)
+        .one(db)
+        .await?;
+    let _ = searched_club.ok_or(DbErr::RecordNotFound(
+        "Aucun club conrrespondant a cette id".to_string(),
+    ))?;
+
     let usr = app_user::ActiveModel {
         username: Set(create_user_dto.username),
         email: Set(create_user_dto.email),
         password: Set(password_hash),
+        id_club: Set(create_user_dto.id_club),
         ..Default::default()
     };
     let active = usr.save(db).await?;
@@ -32,14 +41,7 @@ pub async fn create_user(
     Ok(model)
 }
 
-pub fn hash_password(password: String) -> Result<String, BcryptError> {
-    hash(password, DEFAULT_COST)
-}
-
-pub async fn seach_user(
-    db: &DbConn,
-    login_user_dto: LoginUserDto,
-) -> Result<app_user::Model, DbErr> {
+pub async fn search_user(db: &DbConn, login_user_dto: LoginUserDto) -> Result<String, DbErr> {
     let searched_user = app_user::Entity::find()
         .filter(
             Condition::any()
@@ -53,8 +55,8 @@ pub async fn seach_user(
     ))?;
     match verify(&login_user_dto.password, &user.password) {
         Ok(true) => {
-            if let Ok(_) = session_services::create_session(&db, user.id).await {
-                Ok(user)
+            if let Ok(session) = session_services::create_session(&db, user.id).await {
+                Ok(session.uuid)
             } else {
                 Err(DbErr::RecordNotInserted)
             }

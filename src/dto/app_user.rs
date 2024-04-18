@@ -24,6 +24,7 @@ pub struct CreateUserDto {
     pub username: String,
     pub email: String,
     pub password: String,
+    pub id_club: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]

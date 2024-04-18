@@ -8,6 +8,7 @@ mod m20240408_075736_create_zone;
 mod m20240408_094016_create_slot;
 mod m20240408_095814_alter_user;
 mod m20240409_090416_create_session;
+mod m20240418_125342_alter_user;
 
 pub struct Migrator;
 
@@ -23,6 +24,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20240408_094016_create_slot::Migration),
             Box::new(m20240408_095814_alter_user::Migration),
             Box::new(m20240409_090416_create_session::Migration),
+            Box::new(m20240418_125342_alter_user::Migration),
         ]
     }
 }

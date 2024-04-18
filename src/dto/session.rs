@@ -18,3 +18,14 @@ impl From<session::Model> for SessionDto {
         }
     }
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SessionUuidDto {
+    pub uuid: String,
+}
+
+impl From<String> for SessionUuidDto {
+    fn from(value: String) -> Self {
+        Self { uuid: value }
+    }
+}
