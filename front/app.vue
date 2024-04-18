@@ -1,55 +1,27 @@
 <template>
-  <div class="flex h-screen">
-    <!-- Toggle Button -->
-    <button @click="toggleSidebar" v-if="!showSidebar"
-      class="absolute top-1/2 transform -translate-y-1/2 left-0 mr-2 focus:outline-none">
-
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-    <!-- Sidebar -->
-    <div class="bg-gray-800 text-white w-64 flex-shrink-0 relative" v-if="showSidebar">
-      <button @click="toggleSidebar"
-        class="absolute top-1/2 transform -translate-y-1/2 right-0 mr-2 focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
-
-      <!-- Sidebar Content -->
-      <div class="p-4">
-        <h1 class="text-xl font-bold">Current User</h1>
-        <!-- Add your sidebar content here -->
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="flex flex-col flex-1">
-      <!-- Header -->
-      <div class="bg-white shadow-md p-4">
-        <h1 class="text-2xl font-bold">Club name</h1>
-      </div>
-
-      <!-- Page Content -->
-      <div class="p-4">
-        <NuxtPage></NuxtPage>
-      </div>
-    </div>
+  <div v-if="authentificated">
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
+  <div v-else>
+    <NuxtPage />
   </div>
 </template>
 
 <script>
+definePageMeta({
+  layout: 'default'
+})
 export default {
   data() {
     return {
-      showSidebar: true
+      authentificated: false
     };
   },
   methods: {
-    toggleSidebar() {
-      this.showSidebar = !this.showSidebar;
+    isLogin() {
+      true
     }
   }
 };

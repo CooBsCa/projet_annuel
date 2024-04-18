@@ -3,9 +3,12 @@
 </template>
 
 <script>
-
+// definePageMeta({
+//     layout: 'default'
+// })
 export default {
     name: 'Calendar',
+
     data() {
         return {
             message: 'Calendar',
