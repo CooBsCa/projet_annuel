@@ -2,10 +2,11 @@
     <h1 class="title">{{ message }}</h1>
 </template>
 
+<script setup>
+// let authToken = useState('authToken')
+</script>
+
 <script>
-// definePageMeta({
-//     layout: 'default'
-// })
 export default {
     name: 'Calendar',
 

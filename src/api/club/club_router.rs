@@ -11,4 +11,5 @@ pub fn get_clubs_router() -> Router<AppState> {
     Router::new()
         .route("/clubs", get(club_handler::get_clubs))
         .route("/club", post(club_handler::create_club))
+        .route("/club", get(club_handler::get_club))
 }

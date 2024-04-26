@@ -7,6 +7,7 @@ pub struct AppUserDto {
     pub id: i32,
     pub username: String,
     pub email: String,
+    pub id_club: i32,
 }
 
 impl From<app_user::Model> for AppUserDto {
@@ -15,6 +16,7 @@ impl From<app_user::Model> for AppUserDto {
             id: model.id,
             username: model.username,
             email: model.email,
+            id_club: model.id_club,
         }
     }
 }

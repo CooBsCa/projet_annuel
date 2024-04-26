@@ -31,7 +31,7 @@
         <div class="flex flex-col flex-1">
             <!-- Header -->
             <div class="bg-white shadow-md p-4">
-                <h1 class="text-2xl font-bold">Club name</h1>
+                <h1 class="text-2xl font-bold">{{ club.name }}</h1>
             </div>
 
             <!-- Page Content -->
@@ -43,8 +43,15 @@
 
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
+import { useClubStore } from '~/stores/club'
 
+const clubStore = useClubStore()
+const club = clubStore.getClub() 
+</script>
+
+<script>
 export default {
     data() {
         return {

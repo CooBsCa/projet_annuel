@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authentificated">
+  <div v-if="showLayout">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -18,6 +18,11 @@ export default {
     return {
       authentificated: false
     };
+  },
+  computed: {
+    showLayout() {
+      return !['/login', '/register'].includes(this.$route.path);
+    },
   },
   methods: {
     isLogin() {

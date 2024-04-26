@@ -1,62 +1,62 @@
 <template>
-    <div class="flex justify-center items-center h-screen bg bg-cover">
-      <div class="card p-8 shadow-xl rounded-lg">
-        <h2 class="text-2xl font-bold mb-4 form-title">Rejoignez nous ! 🎾</h2>
-        <form @submit.prevent="register" class="flex flex-col">
-          <div class="mb-4">
-            <input type="text" placeholder="Username" class="input w-full" v-model="username" required/>
-            <!--<input type="text" placeholder="Username" class="input w-full" v-model="username" required>-->  
-          </div>
-          <div class="mb-4">
-            <input type="email" placeholder="Email" class="input w-full" v-model="email" required>
-          </div>
-          <div class="mb-4">
-            <input type="password" placeholder="Password" class="input w-full" v-model="password" required>
-          </div>
-          <div class="mb-4">
-            <input type="text" placeholder="Identifiant Club" class="input w-full" v-model="id_club" required>
-          </div>
-          <button type="submit" class="btn btn-primary self-end">Register</button>
-        </form>
-      </div>
+  <div class="flex justify-center items-center h-screen bg bg-cover">
+    <div class="card p-8 shadow-xl rounded-lg">
+      <h2 class="text-2xl font-bold mb-4 form-title">Rejoignez nous ! 🎾</h2>
+      <form @submit.prevent="register" class="flex flex-col">
+        <div class="mb-4">
+          <input type="text" placeholder="Username" class="input w-full" v-model="username" required />
+          <!--<input type="text" placeholder="Username" class="input w-full" v-model="username" required>-->
+        </div>
+        <div class="mb-4">
+          <input type="email" placeholder="Email" class="input w-full" v-model="email" required>
+        </div>
+        <div class="mb-4">
+          <input type="password" placeholder="Password" class="input w-full" v-model="password" required>
+        </div>
+        <div class="mb-4">
+          <input type="text" placeholder="Identifiant Club" class="input w-full" v-model="id_club" required>
+        </div>
+        <button type="submit" class="btn btn-primary self-end">Register</button>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        username: '',
-        email: '',
-        password: '',
-        idClub: '',
-        showSidebar: true
-      };
-    },
-    methods: {
-      async register() {
-        try {
-          const response = await fetch('http://localhost:3001/register', {
-            method: 'POST',
-            headers: {
-              'accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              username: this.username,
-              email: this.email,
-              password: this.password,
-              id_club: this.id_club,
-            })
-          });
-  
-          console.log(response);
-        } catch (error) {
-          console.error('Erreur de connexion:', error);
-        }
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: '',
+      idClub: '',
+      showSidebar: true
+    };
+  },
+  methods: {
+    async register() {
+      try {
+        const response = await fetch('http://localhost:3001/register', {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: this.username,
+            email: this.email,
+            password: this.password,
+            id_club: +this.id_club,
+          })
+        });
+        this.$router.push('/login')
+        console.log(response);
+      } catch (error) {
+        console.error('Erreur de connexion:', error);
       }
     }
-  };
+  }
+};
 </script>
 
 <style scoped>
