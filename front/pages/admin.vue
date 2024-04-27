@@ -32,14 +32,7 @@ const zones = ref([])
 const getZones = async () => {
     let token = authStore.getToken()
     try {
-        const response = await fetch("http://localhost:3001/zones/" + club.id, {
-            method: "GET",
-            headers: {
-                accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await apiGet("/zones/" + club.id, {});
         zones.value = await response.json();
     } catch (err) {
         console.error(err)
@@ -47,15 +40,9 @@ const getZones = async () => {
 }
 
 const saveClubName = async () => {
-    let token = authStore.getToken()
+
     try {
-        await fetch("http://localhost:3001/club", {
-            method: "PUT",
-            headers: {
-                accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
+        await apiPut("/club", {
             body: JSON.stringify({
                 name: club.name,
                 id: club.id

@@ -18,7 +18,7 @@ const date = ref(new Date());
 const zones = ref([]);
 
 const getZones = async () => {
-    const response = await fetch('http://localhost:3001/zones/' + club.id, {
+    const response = await apiGet('/zones/' + club.id, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
@@ -29,15 +29,10 @@ const getZones = async () => {
 };
 
 const getSlots = async () => {
-    const response = await fetch('http://localhost:3000/api/slots', {
-        headers: {
-            Authorization: `Bearer ${authToken.value}`,
-        },
+    const response = await apiGet('/slots', {
         body: JSON.stringify({
             date: date.value,
         }),
-
-
     });
     const data = await response.json();
     console.log(data);

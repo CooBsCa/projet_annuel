@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   $development: {
     runtimeConfig: {
       public: {
-        baseURL: process.env.BASE_URL || "http://locahost:3001",
+        baseURL: process.env.BASE_URL || "http://localhost:3001",
       },
     },
   },

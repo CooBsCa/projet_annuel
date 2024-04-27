@@ -50,13 +50,7 @@ const emit = defineEmits(['submit'])
 
 const CreateZone = async () => {
     try {
-        await fetch("http://localhost:3001/zone", {
-            method: "POST",
-            headers: {
-                accept: "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
+        await apiPost("/zone", {
             body: JSON.stringify({
                 club_id: club.id,
                 name: nom.value,

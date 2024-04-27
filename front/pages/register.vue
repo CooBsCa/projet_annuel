@@ -36,12 +36,7 @@ export default {
   methods: {
     async register() {
       try {
-        const response = await fetch('http://localhost:3001/register', {
-          method: 'POST',
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
+        const response = await apiPost('/register', {
           body: JSON.stringify({
             username: this.username,
             email: this.email,

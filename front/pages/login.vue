@@ -22,6 +22,7 @@ import { useClubStore } from '~/stores/club'
 
 const authStore = useAuthStore();
 const clubStore = useClubStore()
+authStore.setToken("");
 
 const username = ref('clem')
 const password = ref('aze')
@@ -33,12 +34,7 @@ const login = async () => {
 
   try {
 
-    const response = await fetch("http://localhost:3001/login", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
+    const response = await apiPost("/login", {
       body: JSON.stringify({
         user_login_input: username.value,
         password: password.value,
@@ -62,13 +58,7 @@ const getClub = async () => {
 
   let token = authStore.getToken()
   try {
-    const response = await fetch("http://localhost:3001/club", {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await apiGet("/club", {
     });
     const club = await response.json();
     clubStore.setClub(club)
