@@ -23,12 +23,19 @@
             <!-- Sidebar Content -->
             <div class="p-4">
                 <h1 class="text-xl font-bold">{{ username }}</h1>
-                <!-- Add your sidebar content here -->
+                <ul class="mt-4">
+                    <li class="mb-2">
+                        <nuxt-link to="/calendar" class="text-white">Calendrier</nuxt-link>
+                    </li>
+                    <li class="mb-2">
+                        <nuxt-link to="/admin/club" class="text-white">Admin</nuxt-link>
+                    </li>
+                </ul>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="flex flex-col flex-1">
+        <div class=" flex flex-col flex-1">
             <!-- Header -->
             <div class="bg-white shadow-md p-4">
                 <h1 class="text-2xl font-bold">{{ club.name }}</h1>
