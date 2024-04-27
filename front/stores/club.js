@@ -1,6 +1,7 @@
+import { defineStore } from "pinia";
 export const useClubStore = defineStore('club', {
     state: () => ({
-        club: {}
+        club: ref({})
     }),
     actions: {
         setClub(newClub) {
@@ -9,5 +10,8 @@ export const useClubStore = defineStore('club', {
         getClub() {
             return this.club
         }
-    }
+    },
+    persist: {
+        storage: persistedState.localStorage,
+    },
 })
