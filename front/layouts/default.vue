@@ -24,12 +24,10 @@
             <div class="p-4">
                 <h1 class="text-xl font-bold">{{ username }}</h1>
                 <ul class="mt-4">
-                    <li class="mb-2">
-                        <nuxt-link to="/calendar" class="text-white">Calendrier</nuxt-link>
+                    <li class="mb-2" v-for="path in paths">
+                        <nuxt-link :to="path.path" class="text-white">{{ path.name }}</nuxt-link>
                     </li>
-                    <li class="mb-2">
-                        <nuxt-link to="/admin/club" class="text-white">Admin</nuxt-link>
-                    </li>
+
                 </ul>
             </div>
         </div>
@@ -58,6 +56,11 @@ const clubStore = useClubStore()
 const club = clubStore.getClub()
 const authStore = useAuthStore()
 const username = authStore.getUsername()
+const isAdmin = authStore.getIsAdmin()
+const paths = [
+    { name: 'Calendrier', path: '/calendar', admin: false },
+    { name: 'Admin', path: '/admin/club', admin: true },
+].filter(path => isAdmin || !path.admin)
 </script>
 
 <script>
