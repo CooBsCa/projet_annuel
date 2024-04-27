@@ -45,9 +45,11 @@ const login = async () => {
       }),
     });
     let res = await response.json();
-    let token = res.uuid;
 
-    authStore.setToken(token)
+    authStore.setToken(res.uuid)
+    authStore.setIsAdmin(res.is_admin)
+    authStore.setUsername(res.username)
+
     await getClub();
   } catch (err) {
     error.value = true

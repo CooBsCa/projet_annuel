@@ -9,7 +9,7 @@ mod m20240408_094016_create_slot;
 mod m20240408_095814_alter_user;
 mod m20240409_090416_create_session;
 mod m20240418_125342_alter_user;
-
+mod m20240427_125342_alter_user_admin;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -25,6 +25,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20240408_095814_alter_user::Migration),
             Box::new(m20240409_090416_create_session::Migration),
             Box::new(m20240418_125342_alter_user::Migration),
+            Box::new(m20240427_125342_alter_user_admin::Migration),
         ]
     }
 }

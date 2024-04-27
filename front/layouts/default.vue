@@ -22,7 +22,7 @@
 
             <!-- Sidebar Content -->
             <div class="p-4">
-                <h1 class="text-xl font-bold">Current User</h1>
+                <h1 class="text-xl font-bold">{{ username }}</h1>
                 <!-- Add your sidebar content here -->
             </div>
         </div>
@@ -46,9 +46,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useClubStore } from '~/stores/club'
-
+import { useAuthStore } from '~/stores/auth'
 const clubStore = useClubStore()
-const club = clubStore.getClub() 
+const club = clubStore.getClub()
+const authStore = useAuthStore()
+const username = authStore.getUsername()
 </script>
 
 <script>

@@ -11,6 +11,7 @@ use sea_orm::{ActiveModelTrait, TryIntoModel};
 use sea_orm::{DbConn, EntityTrait, Set};
 
 use crate::dto::app_user::{CreateUserDto, LoginUserDto};
+use crate::dto::session::SessionUuidDto;
 use crate::services::session_services;
 
 pub async fn get_users(db: &DbConn) -> Result<Vec<app_user::Model>, anyhow::Error> {
@@ -41,7 +42,10 @@ pub async fn create_user(
     Ok(model)
 }
 
-pub async fn search_user(db: &DbConn, login_user_dto: LoginUserDto) -> Result<String, DbErr> {
+pub async fn search_user(
+    db: &DbConn,
+    login_user_dto: LoginUserDto,
+) -> Result<SessionUuidDto, DbErr> {
     let searched_user = app_user::Entity::find()
         .filter(
             Condition::any()
@@ -55,8 +59,12 @@ pub async fn search_user(db: &DbConn, login_user_dto: LoginUserDto) -> Result<St
     ))?;
     match verify(&login_user_dto.password, &user.password) {
         Ok(true) => {
-            if let Ok(session) = session_services::create_session(&db, user.id).await {
-                Ok(session.uuid)
+            if let Ok(session) = session_services::create_session(db, user.id).await {
+                Ok(SessionUuidDto {
+                    uuid: session.uuid,
+                    is_admin: user.is_admin,
+                    username: user.username,
+                })
             } else {
                 Err(DbErr::RecordNotInserted)
             }
