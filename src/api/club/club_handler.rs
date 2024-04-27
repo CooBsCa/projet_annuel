@@ -62,3 +62,22 @@ pub async fn create_club(
         .map_err(|_| ApiError::Internal);
     Ok(Json(club?.into()))
 }
+
+#[utoipa::path(
+        put,
+        path = "/club",
+        responses(
+            (status = OK, description = "Updated club", body = ClubDto),
+        ),
+        tag = "Club",
+    )]
+/// Update a club
+pub async fn update_club(
+    State(db): State<DbConn>,
+    Json(data): Json<ClubDto>,
+) -> Result<Json<ClubDto>, ApiError> {
+    let club = crate::services::club_services::update_club(&db, data)
+        .await
+        .map_err(|_| ApiError::Internal);
+    Ok(Json(club?.into()))
+}

@@ -10,6 +10,10 @@ pub mod services;
 pub mod utils;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::DEBUG)
+        .init();
+
     dotenv().ok();
     let db_string = std::env::var("DATABASE_URL").expect("set DATABASE_URL env variable");
     let db = Database::connect(db_string).await.unwrap();

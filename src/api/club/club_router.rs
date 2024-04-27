@@ -1,5 +1,5 @@
 use axum::{
-    routing::{get, post},
+    routing::{get, post, put},
     Router,
 };
 
@@ -12,4 +12,5 @@ pub fn get_clubs_router() -> Router<AppState> {
         .route("/clubs", get(club_handler::get_clubs))
         .route("/club", post(club_handler::create_club))
         .route("/club", get(club_handler::get_club))
+        .route("/club", put(club_handler::update_club))
 }

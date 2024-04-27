@@ -1,6 +1,6 @@
 use axum::{middleware, Router};
 use sea_orm::DbConn;
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use utoipa::{
     openapi::{
         self,
@@ -40,8 +40,9 @@ fn get_router(state: AppState) -> Router<AppState> {
         .merge(get_slot_router())
         .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
         .merge(get_auth_router())
-        .layer(CorsLayer::very_permissive())
+        .layer(CorsLayer::permissive())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
+        .layer(TraceLayer::new_for_http())
 }
 
 /// Swagger OpenApi documentation of the API
