@@ -24,6 +24,9 @@
 <script setup>
 import { useAuthStore } from '~/stores/auth'
 import { useClubStore } from '~/stores/club'
+import { useNotifyStore, NotificationType } from '~/stores/notify'
+
+const notifyStore = useNotifyStore()
 const authStore = useAuthStore();
 const clubStore = useClubStore()
 const club = clubStore.getClub()
@@ -48,7 +51,9 @@ const saveClubName = async () => {
                 id: club.id
             }),
         });
+        notifyStore.notify("Club modifié avec succès", NotificationType.Success);
     } catch (err) {
+        notifyStore.notify("Une erreur est survenue lors de l'enregistrement", NotificationType.Error);
         console.error(err)
     }
 }

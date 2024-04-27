@@ -39,9 +39,16 @@
                 <h1 class="text-2xl font-bold">{{ club.name }}</h1>
             </div>
 
+
             <!-- Page Content -->
             <div class="p-4">
                 <slot></slot>
+            </div>
+            <div class="toast toast-right toast-top">
+                <div v-for="notification in notifications" :class="notification.type"
+                    @click.prevent="notifyStore.removeNotification(notification)">
+                    <span>{{ notification.message }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -49,9 +56,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+
 import { useClubStore } from '~/stores/club'
 import { useAuthStore } from '~/stores/auth'
+import { useNotifyStore } from '~/stores/notify'
+
+const notifyStore = useNotifyStore()
+const { notifications } = storeToRefs(notifyStore);
+
 const clubStore = useClubStore()
 const club = clubStore.getClub()
 const authStore = useAuthStore()

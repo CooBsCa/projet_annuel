@@ -34,7 +34,12 @@ const login = async () => {
 
   try {
 
-    const response = await apiPost("/login", {
+    const response = await fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         user_login_input: username.value,
         password: password.value,
