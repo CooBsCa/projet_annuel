@@ -6,6 +6,7 @@ use crate::utils::time_format;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ZoneDto {
+    pub id: Option<i32>,
     pub name: String,
     pub club_id: i32,
     #[serde(with = "time_format")]
@@ -18,6 +19,7 @@ pub struct ZoneDto {
 impl From<zone::Model> for ZoneDto {
     fn from(model: zone::Model) -> Self {
         Self {
+            id: Some(model.id),
             name: model.name,
             club_id: model.club_id,
             open_at: model.open_at,

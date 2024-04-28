@@ -41,3 +41,21 @@ pub async fn get_zones_by_club(
         .map(|zones| Json(zones.into_iter().map(|z| z.into()).collect()))
         .map_err(|_| ApiError::Internal)
 }
+
+/// delete zone
+#[utoipa::path(
+        delete,
+        path = "/zone/{zone_id}",
+        responses(
+            (status = OK, description = "Delete zone", body = ZoneDto),
+        ),
+        tag = "Zone",
+    )]
+pub async fn delete_zone(
+    State(db): State<DbConn>,
+    Path(zone_id): Path<i32>,
+) -> Result<(), ApiError> {
+    zone_services::delete_zone(&db, zone_id)
+        .await
+        .map_err(|_| ApiError::Internal)
+}

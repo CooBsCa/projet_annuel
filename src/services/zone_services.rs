@@ -23,3 +23,8 @@ pub async fn get_zones_by_club(db: &DbConn, club_id: i32) -> Result<Vec<zone::Mo
         .all(db)
         .await
 }
+
+pub async fn delete_zone(db: &DbConn, zone_id: i32) -> Result<(), DbErr> {
+    zone::Entity::delete_by_id(zone_id).exec(db).await?;
+    Ok(())
+}
