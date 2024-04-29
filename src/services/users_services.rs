@@ -21,12 +21,25 @@ pub async fn get_users(db: &DbConn) -> Result<Vec<app_user::Model>, anyhow::Erro
 pub async fn create_user(
     db: &DbConn,
     create_user_dto: CreateUserDto,
-) -> Result<app_user::Model, anyhow::Error> {
+) -> Result<SessionUuidDto, anyhow::Error> {
+    let user_exists = app_user::Entity::find()
+        .filter(
+            Condition::any()
+                .add(app_user::Column::Username.eq(&create_user_dto.username))
+                .add(app_user::Column::Email.eq(&create_user_dto.email)),
+        )
+        .one(db)
+        .await?;
+    if user_exists.is_some() {
+        return Err(
+            DbErr::Custom("Un utilisateur avec ce nom ou email existe déjà".to_string()).into(),
+        );
+    }
     let password_hash = hash(create_user_dto.password, DEFAULT_COST)?;
     let searched_club = club::Entity::find_by_id(create_user_dto.id_club)
         .one(db)
         .await?;
-    let _ = searched_club.ok_or(DbErr::RecordNotFound(
+    searched_club.ok_or(DbErr::RecordNotFound(
         "Aucun club conrrespondant a cette id".to_string(),
     ))?;
 
@@ -37,9 +50,15 @@ pub async fn create_user(
         id_club: Set(create_user_dto.id_club),
         ..Default::default()
     };
-    let active = usr.save(db).await?;
+    let active: app_user::ActiveModel = usr.save(db).await?;
     let model: app_user::Model = active.try_into_model()?;
-    Ok(model)
+    // Ok(model)
+    let session = session_services::create_session(db, model.id).await?;
+    Ok(SessionUuidDto {
+        uuid: session.uuid,
+        is_admin: model.is_admin,
+        username: model.username,
+    })
 }
 
 pub async fn search_user(

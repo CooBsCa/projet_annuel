@@ -1,4 +1,5 @@
 use axum::{extract::State, http::StatusCode, Json};
+use entity::session;
 use sea_orm::DbConn;
 
 use crate::{
@@ -22,11 +23,11 @@ use crate::{
 pub async fn register_user(
     State(db): State<DbConn>,
     Json(create_user_dto): Json<CreateUserDto>,
-) -> Result<StatusCode, ApiError> {
-    let _ = users_services::create_user(&db, create_user_dto)
+) -> Result<Json<SessionUuidDto>, ApiError> {
+    let session_uuid = users_services::create_user(&db, create_user_dto)
         .await
-        .map_err(|_| ApiError::Internal);
-    Ok(StatusCode::CREATED)
+        .map_err(|_| ApiError::Internal)?;
+    Ok(Json(session_uuid.into()))
 }
 
 #[utoipa::path(
