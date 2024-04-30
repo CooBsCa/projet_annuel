@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     showLayout() {
-      return !['/login', '/register'].includes(this.$route.path);
+      return !['/home','/home2'].includes(this.$route.path);
     },
   },
   methods: {
