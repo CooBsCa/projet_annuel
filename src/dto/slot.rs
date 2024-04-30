@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct SlotDto {
     pub id: i32,
-    pub user_id: Option<i32>,
+    pub user_id: i32,
     pub zone_id: i32,
     pub start_at: NaiveDateTime,
     pub end_at: NaiveDateTime,
@@ -38,8 +38,19 @@ pub struct CreateSlotDto {
     pub end_at: NaiveDateTime,
 }
 
+impl From<slot::Model> for CreateSlotDto {
+    fn from(value: slot::Model) -> Self {
+        CreateSlotDto {
+            zone_id: value.zone_id,
+            start_at: value.start_at,
+            end_at: value.end_at,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct ClaimSlotDto {
-    pub user_id: i32,
-    pub slot_id: i32,
+    pub zone_id: i32,
+    pub start_at: NaiveDateTime,
+    pub end_at: NaiveDateTime,
 }
