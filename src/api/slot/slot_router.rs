@@ -9,7 +9,7 @@ use super::slot_handler;
 
 pub fn get_slot_router() -> Router<AppState> {
     Router::new()
-        .route("/get-claimed-slots", get(slot_handler::get_claimed_slots))
+        .route("/claimed-slots", get(slot_handler::get_claimed_slots))
         .route("/claim-slot", post(slot_handler::claim_slot))
         .route(
             "/get-available-slots",

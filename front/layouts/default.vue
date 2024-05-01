@@ -71,6 +71,7 @@ const username = authStore.getUsername()
 const isAdmin = authStore.getIsAdmin()
 const paths = [
     { name: 'Calendrier', path: '/calendar', admin: false },
+    { name: 'Réservations', path: '/reservations', admin: false },
     { name: 'Admin', path: '/admin', admin: true },
 ].filter(path => isAdmin || !path.admin)
 </script>

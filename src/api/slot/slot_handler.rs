@@ -32,7 +32,7 @@ pub async fn get_available_slots(
 
 #[utoipa::path(
         get,
-        path = "/get-claimed-slots",
+        path = "/claimed-slots",
         responses(
             (status = OK, description = "Get claimed slot for current usr", body = Vec<SlotDto>),
         ),
