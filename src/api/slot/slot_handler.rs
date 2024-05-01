@@ -38,6 +38,7 @@ pub async fn get_available_slots(
         ),
         tag = "Slot",
     )]
+/// Get slot claimed by current user
 pub async fn get_claimed_slots(
     State(db): State<DbConn>,
     Extension(usr): Extension<AppUserDto>,
