@@ -1,10 +1,10 @@
 <template>
-  <div v-if="showLayout">
+  <div v-if="showLayout" data-theme="wimbledon">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
-  <div v-else>
+  <div v-else data-theme="wimbledon">
     <NuxtPage />
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     showLayout() {
-      return !['/home','/home2'].includes(this.$route.path);
+      return !['/home', '/home2'].includes(this.$route.path);
     },
   },
   methods: {

@@ -10,7 +10,7 @@
             </svg>
         </button>
         <!-- Sidebar -->
-        <div class="bg-gray-800 text-white w-64 flex-shrink-0 relative" v-if="showSidebar">
+        <div class="bg-secondary text-white w-64 flex-shrink-0 relative" v-if="showSidebar">
             <button @click="toggleSidebar"
                 class="absolute top-1/2 transform -translate-y-1/2 right-0 mr-2 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -35,7 +35,7 @@
         <!-- Main Content -->
         <div class=" flex flex-col flex-1">
             <!-- Header -->
-            <div class="bg-white shadow-md p-4">
+            <div class="bg-primary shadow-md p-4">
                 <h1 class="text-2xl font-bold">{{ club.name }}</h1>
             </div>
 
