@@ -2,7 +2,7 @@
     <h1 class="text-2xl font-bold">Vos réservations</h1>
     <div class="grid grid-cols-1 gap-4">
         <template v-for="slot in claimedSlots" :key="slot.id">
-            <Reservation :reservation="slot" />
+            <Reservation @delete="getClaimedSlots" :reservation="slot" />
         </template>
     </div>
 </template>
@@ -60,6 +60,7 @@ const getMockClaimedSlots = () => {
         }
     ]
 }
+
 const get_date_with_hour = (date, hour) => {
     let new_date = new Date(date)
     new_date.setHours(hour, 0, 0, 0)

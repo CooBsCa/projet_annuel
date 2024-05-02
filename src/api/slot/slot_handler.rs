@@ -1,4 +1,7 @@
-use axum::{extract::State, Extension, Json};
+use axum::{
+    extract::{Path, State},
+    Extension, Json,
+};
 use sea_orm::DbConn;
 
 use crate::{
@@ -94,4 +97,10 @@ pub async fn get_future_claimed_slots(
             .map_err(|_| ApiError::Internal)?
             .len(),
     ))
+}
+
+pub async fn cancel_slot(State(db): State<DbConn>, Path(id): Path<i32>) -> Result<(), ApiError> {
+    Ok(slot_services::cancel_slot(&db, id)
+        .await
+        .map_err(|_| ApiError::NotFound)?)
 }

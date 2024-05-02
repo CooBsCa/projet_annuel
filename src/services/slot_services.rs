@@ -118,6 +118,11 @@ pub async fn create_slot(
     slot.save(db).await?.try_into_model()
 }
 
+pub async fn cancel_slot(db: &DbConn, slot_id: i32) -> Result<(), DbErr> {
+    slot::Entity::delete_by_id(slot_id).exec(db).await?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use std::vec;
