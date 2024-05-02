@@ -23,10 +23,14 @@
             <!-- Sidebar Content -->
             <div class="p-4">
                 <h1 class="text-xl font-bold">{{ username }}</h1>
-                <ul class="mt-4">
+                <div class="divider"></div>
+                <ul class="mt-4 flex flex-col justify-center">
                     <li class="mb-2" v-for="path in paths">
-                        <nuxt-link :to="path.path" class="text-white">{{ path.name }}</nuxt-link>
+                        <nuxt-link :to="path.path" class="text-white text-xl">{{
+            path.name }}</nuxt-link>
+
                     </li>
+
 
                 </ul>
             </div>
@@ -87,9 +91,9 @@ const claimsColor = computed(() => {
     }
 })
 const paths = [
-    { name: 'Calendrier', path: '/calendar', admin: false },
-    { name: 'Réservations', path: '/reservations', admin: false },
-    { name: 'Admin', path: '/admin', admin: true },
+    { name: '🗓️ Calendrier', path: '/calendar', admin: false },
+    { name: '📋 Réservations', path: '/reservations', admin: false },
+    { name: '🔓 Admin', path: '/admin', admin: true },
 ].filter(path => isAdmin || !path.admin)
 </script>
 
