@@ -55,6 +55,17 @@ pub async fn get_claimed_slots(db: &DbConn, user_id: i32) -> Result<Vec<slot::Mo
         .await
 }
 
+pub async fn get_future_claimed_slots(
+    db: &DbConn,
+    user_id: i32,
+) -> Result<Vec<slot::Model>, DbErr> {
+    slot::Entity::find()
+        .filter(slot::Column::UserId.eq(user_id))
+        .filter(slot::Column::StartAt.gt(chrono::Utc::now().naive_utc()))
+        .all(db)
+        .await
+}
+
 pub async fn claim_slot(db: &DbConn, slot_id: i32, user_id: i32) -> Result<slot::Model, DbErr> {
     let slot = slot::Entity::find_by_id(slot_id)
         .one(db)

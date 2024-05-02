@@ -35,8 +35,13 @@
         <!-- Main Content -->
         <div class=" flex flex-col flex-1">
             <!-- Header -->
-            <div class="bg-primary shadow-md p-4">
+            <div class="bg-primary shadow-md p-4 flex flex-row justify-between">
                 <h1 class="text-2xl font-bold">{{ club.name }}</h1>
+                <div class="flex justify-end items-center">
+                    <div class="text-xl">Réservations disponibles:</div>
+                    <div class="badge text-xl" :class="[claimsColor]">{{ availableClaimsNumber }}/{{
+            totalClaimsNumber }}</div>
+                </div>
             </div>
 
 
@@ -60,7 +65,6 @@
 import { useClubStore } from '~/stores/club'
 import { useAuthStore } from '~/stores/auth'
 import { useNotifyStore } from '~/stores/notify'
-
 const notifyStore = useNotifyStore()
 const { notifications } = storeToRefs(notifyStore);
 
@@ -69,6 +73,19 @@ const club = clubStore.getClub()
 const authStore = useAuthStore()
 const username = authStore.getUsername()
 const isAdmin = authStore.getIsAdmin()
+const totalClaimsNumber = 2;
+const futurClaimsNumber = authStore.getFuturClaimsNumber()
+const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
+
+const claimsColor = computed(() => {
+    if (availableClaimsNumber.value === 0) {
+        return 'badge-error'
+    } else if (availableClaimsNumber.value === 1) {
+        return 'badge-secondary'
+    } else {
+        return 'badge-secondary'
+    }
+})
 const paths = [
     { name: 'Calendrier', path: '/calendar', admin: false },
     { name: 'Réservations', path: '/reservations', admin: false },

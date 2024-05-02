@@ -8,6 +8,7 @@ export default {
         wimbledon: {
           "primary": "#e6c9a4",
           "secondary": "#388564",
+          "secondary-200": "#CDE1D8",
           "accent": "#34156f",
           "neutral": "#73ce9f",
           "base-100": "#ffffff",

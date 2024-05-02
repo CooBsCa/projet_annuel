@@ -74,3 +74,24 @@ pub async fn claim_slot(
         .map(Json)
         .map_err(|_| ApiError::NotFound)
 }
+
+#[utoipa::path(
+        get,
+        path = "/future-claimed-slots",
+        responses(
+            (status = OK, description = "Get number of future claimed slots", body = i32),
+        ),
+        tag = "Slot",
+    )]
+/// Get number of future claimed slots
+pub async fn get_future_claimed_slots(
+    State(db): State<DbConn>,
+    Extension(usr): Extension<AppUserDto>,
+) -> Result<Json<usize>, ApiError> {
+    Ok(Json(
+        slot_services::get_future_claimed_slots(&db, usr.id)
+            .await
+            .map_err(|_| ApiError::Internal)?
+            .len(),
+    ))
+}
