@@ -25,7 +25,7 @@ pub async fn get_available_slots(
     Ok(Json(
         slot_services::get_available_slots(&db, data)
             .await
-            .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
+            .map(|slots| slots.into_iter().collect())
             .map_err(|_| ApiError::Internal)?,
     ))
 }
