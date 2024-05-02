@@ -125,6 +125,7 @@ const register = async () => {
     authStore.setIsAdmin(res.is_admin)
     authStore.setUsername(res.username)
 
+
     await getClub();
 
   } catch (err) {
@@ -134,18 +135,28 @@ const register = async () => {
   }
 }
 const getClub = async () => {
-  let token = authStore.getToken()
   try {
     const response = await apiGet("/club", {
     });
     const club = await response.json();
     clubStore.setClub(club)
+    await getAvailableClaims();
     await navigateTo('/calendar')
   } catch (error) {
     console.error("Erreur de connexion:", error);
   }
 }
 
+const getAvailableClaims = async () => {
+  try {
+    const response = await apiGet("/future-claimed-slots", {
+    });
+    const data = await response.json();
+    authStore.setFuturClaimsNumber(data)
+  } catch (error) {
+    console.error("Erreur de connexion:", error);
+  }
+}
 </script>
 
 <style scoped>

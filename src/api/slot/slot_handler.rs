@@ -1,4 +1,7 @@
-use axum::{extract::State, Extension, Json};
+use axum::{
+    extract::{Path, State},
+    Extension, Json,
+};
 use sea_orm::DbConn;
 
 use crate::{
@@ -73,4 +76,31 @@ pub async fn claim_slot(
         .map(|slot| slot.into())
         .map(Json)
         .map_err(|_| ApiError::NotFound)
+}
+
+#[utoipa::path(
+        get,
+        path = "/future-claimed-slots",
+        responses(
+            (status = OK, description = "Get number of future claimed slots", body = i32),
+        ),
+        tag = "Slot",
+    )]
+/// Get number of future claimed slots
+pub async fn get_future_claimed_slots(
+    State(db): State<DbConn>,
+    Extension(usr): Extension<AppUserDto>,
+) -> Result<Json<usize>, ApiError> {
+    Ok(Json(
+        slot_services::get_future_claimed_slots(&db, usr.id)
+            .await
+            .map_err(|_| ApiError::Internal)?
+            .len(),
+    ))
+}
+
+pub async fn cancel_slot(State(db): State<DbConn>, Path(id): Path<i32>) -> Result<(), ApiError> {
+    Ok(slot_services::cancel_slot(&db, id)
+        .await
+        .map_err(|_| ApiError::NotFound)?)
 }

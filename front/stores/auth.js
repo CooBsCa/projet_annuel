@@ -4,6 +4,7 @@ export const useAuthStore = defineStore('auth', {
         token: ref(''),
         isAdmin: ref(false),
         username: ref(''),
+        futurClaimsNumber: ref(0),
     }),
     actions: {
         setToken(newToken) {
@@ -23,6 +24,12 @@ export const useAuthStore = defineStore('auth', {
         },
         getUsername() {
             return this.username
+        },
+        setFuturClaimsNumber(futurClaimsNumber) {
+            this.futurClaimsNumber = futurClaimsNumber
+        },
+        getFuturClaimsNumber() {
+            return this.futurClaimsNumber
         },
     },
     persist: {
