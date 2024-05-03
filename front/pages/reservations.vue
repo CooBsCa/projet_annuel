@@ -1,17 +1,35 @@
 <template>
-    <h1 class="text-2xl font-bold">Vos réservations</h1>
-    <div class="grid grid-cols-1 gap-4">
-        <template v-for="slot in claimedSlots" :key="slot.id">
-            <Reservation @delete="getClaimedSlots" :reservation="slot" />
-        </template>
+
+    <div class="flex">
+        <div class="grid grid-cols-1 gap-4">
+            <h1 class="text-2xl font-bold">Vos réservations</h1>
+            <template v-for="slot in claimedSlots" :key="slot.id">
+                <Reservation @delete="getClaimedSlots" :reservation="slot" />
+            </template>
+        </div>
+        <div class="grow flex flex-col items-center">
+            <h1 class="text-2xl font-bold">Progression</h1>
+            <div class="radial-progress mt-5 text-accent border-4 drop-shadow-lg"
+                :style="'--value:' + percentage + '; --size: 20rem; --thickness: 2rem; '" role="progressbar">
+                <div class="text-6xl">{{ level }}</div>
+
+            </div>
+        </div>
     </div>
+
+
 </template>
 <script setup>
 import { useClubStore } from '~/stores/club'
+import { useLevelStore } from '~/stores/level'
+
+const levelStore = useLevelStore()
 const clubStore = useClubStore()
 const club = clubStore.getClub()
 
 const claimedSlots = ref([])
+const level = levelStore.getLevel()
+const percentage = levelStore.getPercentage()
 
 const getZones = async () => {
     const response = await apiGet('/zones/' + club.id, {

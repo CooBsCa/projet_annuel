@@ -19,6 +19,11 @@ pub fn get_slot_router() -> Router<AppState> {
             "/future-claimed-slots",
             get(slot_handler::get_future_claimed_slots),
         )
+        .route(
+            "/past-claimed-slots",
+            get(slot_handler::get_past_claimed_slots),
+        )
         .route("/cancel-slot/:id", delete(slot_handler::cancel_slot))
+
     // .route("/slots/{zone_id}", get(get_slots_by_zone))
 }

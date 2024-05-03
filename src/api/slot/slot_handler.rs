@@ -99,6 +99,26 @@ pub async fn get_future_claimed_slots(
     ))
 }
 
+#[utoipa::path(
+        get,
+        path = "/past-claimed-slots",
+        responses(
+            (status = OK, description = "Get number of past claimed slots", body = i32),
+        ),
+        tag = "Slot",
+    )]
+/// Get number of past claimed slots
+pub async fn get_past_claimed_slots(
+    State(db): State<DbConn>,
+    Extension(usr): Extension<AppUserDto>,
+) -> Result<Json<u64>, ApiError> {
+    Ok(Json(
+        slot_services::count_past_claimed_slots(&db, usr.id)
+            .await
+            .map_err(|_| ApiError::Internal)?,
+    ))
+}
+
 pub async fn cancel_slot(State(db): State<DbConn>, Path(id): Path<i32>) -> Result<(), ApiError> {
     slot_services::cancel_slot(&db, id)
         .await

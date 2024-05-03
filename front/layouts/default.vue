@@ -22,7 +22,15 @@
 
             <!-- Sidebar Content -->
             <div class="p-4">
-                <h1 class="text-xl font-bold">{{ username }}</h1>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-xl font-bold">{{ username }}</h1>
+                    <div class="radial-progress text-secondary-content bg-accent drop-shadow-md"
+                        :style="'--value:' + percentage + '; --size: 2rem; --thickness: 0.2rem; '" role="progressbar">
+                        <div class="text-xs">{{ level }}</div>
+                    </div>
+
+
+                </div>
                 <div class="divider"></div>
                 <ul class="mt-4 flex flex-col justify-center">
                     <li class="mb-2" v-for="path in paths">
@@ -69,6 +77,9 @@
 import { useClubStore } from '~/stores/club'
 import { useAuthStore } from '~/stores/auth'
 import { useNotifyStore } from '~/stores/notify'
+import { useLevelStore } from '~/stores/level'
+
+const levelStore = useLevelStore()
 const notifyStore = useNotifyStore()
 const { notifications } = storeToRefs(notifyStore);
 
@@ -80,6 +91,9 @@ const isAdmin = authStore.getIsAdmin()
 const totalClaimsNumber = 2;
 const futurClaimsNumber = authStore.getFuturClaimsNumber()
 const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
+
+const level = levelStore.getLevel()
+const percentage = levelStore.getPercentage()
 
 const claimsColor = computed(() => {
     if (availableClaimsNumber.value === 0) {

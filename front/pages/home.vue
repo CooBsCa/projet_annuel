@@ -1,42 +1,24 @@
 <template>
-    <div class="flex justify-center items-center h-screen bg bg-cover">
-      <!-- Colonne pour le formulaire d'inscription -->
-      <div class="flex justify-center items-center w-1/2">
-        <div class="card p-8 shadow-xl rounded-lg">
-          <h2 class="text-2xl font-bold mb-4 form-title">Rejoignez nous ! 🎾</h2>
-          <form @submit.prevent="register" class="flex flex-col">
-            <div class="mb-4">
-              <input type="text" placeholder="Identifiant" class="input w-full" v-model="username" required/>
-            </div>
-            <div class="mb-4">
-              <input type="email" placeholder="Email" class="input w-full" v-model="email" required>
-            </div>
-            <div class="mb-4">
-              <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="password" required>
-            </div>
-            <div class="mb-4">
-              <input type="text" placeholder="Identifiant Club" class="input w-full" v-model="id_club" required>
-            </div>
-            <button type="submit" class="btn btn-primary self-end">Register</button>
-          </form>
-        </div>
-      </div>
-  
-      <!-- Colonne pour le formulaire de login -->
-      <div class="flex justify-center items-center w-1/2">
-        <div class="card p-8 shadow-xl rounded-lg">
-          <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
-          <form @submit.prevent="login" class="flex flex-col">
-            <div class="mb-4">
-              <input type="text" placeholder="Identifiant" class="input w-full" v-model="usernameLogin" required/>
-            </div>
-            <div class="mb-4">
-              <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="passwordLogin" required>
-            </div>
-            <a href="#" class="forgot-password-link self-end mb-4" @click.prevent="forgotPassword">Mot de passe oublié ?</a>
-            <button type="submit" class="btn btn-primary self-end">Login</button>
-          </form>
-        </div>
+  <div class="flex justify-center items-center h-screen bg bg-cover">
+    <!-- Colonne pour le formulaire d'inscription -->
+    <div class="flex justify-center items-center w-1/2">
+      <div class="card p-8 shadow-xl rounded-lg">
+        <h2 class="text-2xl font-bold mb-4 form-title">Rejoignez nous ! 🎾</h2>
+        <form @submit.prevent="register" class="flex flex-col">
+          <div class="mb-4">
+            <input type="text" placeholder="Identifiant" class="input w-full" v-model="username" required />
+          </div>
+          <div class="mb-4">
+            <input type="email" placeholder="Email" class="input w-full" v-model="email" required>
+          </div>
+          <div class="mb-4">
+            <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="password" required>
+          </div>
+          <div class="mb-4">
+            <input type="text" placeholder="Identifiant Club" class="input w-full" v-model="id_club" required>
+          </div>
+          <button type="submit" class="btn btn-primary self-end">Register</button>
+        </form>
       </div>
     </div>
 
@@ -46,24 +28,46 @@
         <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
         <form @submit.prevent="login" class="flex flex-col">
           <div class="mb-4">
-            <input type="text" placeholder="Username" class="input w-full" v-model="usernameLogin" required />
+            <input type="text" placeholder="Identifiant" class="input w-full" v-model="usernameLogin" required />
           </div>
           <div class="mb-4">
-            <input type="password" placeholder="Password" class="input w-full" v-model="passwordLogin" required>
+            <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="passwordLogin" required>
           </div>
+          <a href="#" class="forgot-password-link self-end mb-4" @click.prevent="forgotPassword">Mot de passe oublié
+            ?</a>
           <button type="submit" class="btn btn-primary self-end">Login</button>
         </form>
       </div>
     </div>
+  </div>
+
+  <!-- Colonne pour le formulaire de login -->
+  <div class="flex justify-center items-center w-1/2">
+    <div class="card p-8 shadow-xl rounded-lg">
+      <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
+      <form @submit.prevent="login" class="flex flex-col">
+        <div class="mb-4">
+          <input type="text" placeholder="Username" class="input w-full" v-model="usernameLogin" required />
+        </div>
+        <div class="mb-4">
+          <input type="password" placeholder="Password" class="input w-full" v-model="passwordLogin" required>
+        </div>
+        <button type="submit" class="btn btn-primary self-end">Login</button>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 import { useClubStore } from '~/stores/club'
+import { useLevelStore } from '~/stores/level'
 
 const authStore = useAuthStore();
 const clubStore = useClubStore()
+const levelStore = useLevelStore()
+
 authStore.setToken("");
 
 const error = ref(false)
@@ -141,6 +145,7 @@ const getClub = async () => {
     const club = await response.json();
     clubStore.setClub(club)
     await getAvailableClaims();
+    await getPastClaims();
     await navigateTo('/calendar')
   } catch (error) {
     console.error("Erreur de connexion:", error);
@@ -157,6 +162,18 @@ const getAvailableClaims = async () => {
     console.error("Erreur de connexion:", error);
   }
 }
+
+const getPastClaims = async () => {
+  try {
+    const response = await apiGet("/past-claimed-slots", {
+    });
+    const data = await response.json();
+    levelStore.setPastClaimsNumber(data)
+  } catch (error) {
+    console.error("Erreur de connexion:", error);
+  }
+}
+
 </script>
 
 <style scoped>
@@ -175,8 +192,8 @@ const getAvailableClaims = async () => {
 }
 
 .form-title {
-    color: rgba(254, 237, 107, 1);
-  }
+  color: rgba(254, 237, 107, 1);
+}
 
 .bg {
   background-image: url('../../images/wimbledon_background.jpeg');
@@ -184,15 +201,15 @@ const getAvailableClaims = async () => {
 
 
 .btn-primary {
-    background-color: rgba(225, 96, 205, 1);
-    border: rgba(225, 96, 205, 1);
-    color: rgba(58, 11, 125, 1);
-  }
+  background-color: rgba(225, 96, 205, 1);
+  border: rgba(225, 96, 205, 1);
+  color: rgba(58, 11, 125, 1);
+}
 
 
-  .forgot-password-link {
-    color: rgba(254, 237, 107, 1);
-    font-size: 14px;
-    text-decoration: underline;
-  }
+.forgot-password-link {
+  color: rgba(254, 237, 107, 1);
+  font-size: 14px;
+  text-decoration: underline;
+}
 </style>

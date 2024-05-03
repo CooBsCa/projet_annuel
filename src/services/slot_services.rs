@@ -10,6 +10,7 @@ use entity::zone;
 use sea_orm::ActiveModelTrait;
 use sea_orm::ColumnTrait;
 use sea_orm::EntityTrait;
+use sea_orm::PaginatorTrait;
 use sea_orm::QueryFilter;
 use sea_orm::Set;
 use sea_orm::TryIntoModel;
@@ -64,6 +65,15 @@ pub async fn get_future_claimed_slots(
         .filter(slot::Column::StartAt.gt(chrono::Utc::now().naive_utc()))
         .all(db)
         .await
+}
+
+pub async fn count_past_claimed_slots(db: &DbConn, user_id: i32) -> Result<u64, DbErr> {
+    slot::Entity::find()
+        .filter(slot::Column::UserId.eq(user_id))
+        .filter(slot::Column::StartAt.lt(chrono::Utc::now().naive_utc()))
+        .count(db)
+        .await?;
+    Ok(567)
 }
 
 pub async fn claim_slot(db: &DbConn, slot_id: i32, user_id: i32) -> Result<slot::Model, DbErr> {
