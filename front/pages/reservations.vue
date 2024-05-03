@@ -12,6 +12,28 @@
             <div class="radial-progress mt-5 text-accent border-4 drop-shadow-lg"
                 :style="'--value:' + percentage + '; --size: 20rem; --thickness: 2rem; '" role="progressbar">
                 <div class="text-6xl">{{ level }}</div>
+            </div>
+
+
+            <div class="stats shadow mt-10">
+
+                <div class="stat place-items-center">
+                    <div class="stat-title">Total</div>
+                    <div class="stat-value">{{ totalReservations }}</div>
+                    <div class="stat-desc">Depuis la création de votre compte</div>
+                </div>
+
+                <div class="stat place-items-center">
+                    <div class="stat-title">Mois courant</div>
+                    <div class="stat-value text-secondary">{{ currentMonthNumber }}</div>
+                    <div class="stat-desc text-secondary">Réservations</div>
+                </div>
+
+                <div class="stat place-items-center">
+                    <div class="stat-title">Niveau</div>
+                    <div class="stat-value">{{ slotBeforeNextLevel }}</div>
+                    <div class="stat-desc">Réservations avant le prochain palier</div>
+                </div>
 
             </div>
         </div>
@@ -30,6 +52,17 @@ const club = clubStore.getClub()
 const claimedSlots = ref([])
 const level = levelStore.getLevel()
 const percentage = levelStore.getPercentage()
+const totalReservations = levelStore.getPastClaimsNumber()
+
+const currentMonthNumber = computed(() => {
+    return claimedSlots.value.filter(slot => {
+        return new Date(slot.start_at).getMonth() === new Date().getMonth()
+    }).length
+})
+
+const slotBeforeNextLevel = computed(() => {
+    return levelStore.getSlotBeforeNextLevel()
+})
 
 const getZones = async () => {
     const response = await apiGet('/zones/' + club.id, {
