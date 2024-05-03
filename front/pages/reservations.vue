@@ -70,7 +70,7 @@ const getZones = async () => {
     });
     const zones = await response.json();
     console.log(zones)
-    let slots = getMockClaimedSlots()
+    let slots = getClaimedSlots()
     slots.forEach(element => {
         element.zone_name = zones.find(zone => zone.id === element.zone_id).name
     });

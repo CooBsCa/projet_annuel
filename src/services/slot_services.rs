@@ -72,8 +72,7 @@ pub async fn count_past_claimed_slots(db: &DbConn, user_id: i32) -> Result<u64, 
         .filter(slot::Column::UserId.eq(user_id))
         .filter(slot::Column::StartAt.lt(chrono::Utc::now().naive_utc()))
         .count(db)
-        .await?;
-    Ok(567)
+        .await
 }
 
 pub async fn claim_slot(db: &DbConn, slot_id: i32, user_id: i32) -> Result<slot::Model, DbErr> {
