@@ -18,6 +18,7 @@ const getZones = async () => {
 
     });
     const zones = await response.json();
+    console.log(zones)
     let slots = getMockClaimedSlots()
     slots.forEach(element => {
         element.zone_name = zones.find(zone => zone.id === element.zone_id).name
@@ -42,19 +43,19 @@ const getMockClaimedSlots = () => {
     return [
         {
             id: 1,
-            zone_id: 1,
+            zone_id: 6,
             start_at: get_date_with_hour(current_date, 10),
             end_at: get_date_with_hour(current_date, 11)
         },
         {
             id: 2,
-            zone_id: 2,
+            zone_id: 7,
             start_at: get_date_with_hour(current_date, 18),
             end_at: get_date_with_hour(current_date, 19)
         },
         {
             id: 3,
-            zone_id: 1,
+            zone_id: 8,
             start_at: get_date_with_hour(previous_date, 20),
             end_at: get_date_with_hour(previous_date, 21)
         }
