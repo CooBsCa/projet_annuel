@@ -15,6 +15,7 @@ use crate::api::state::AppState;
 
 use super::{
     auth::auth_router::get_auth_router, club::club_router::get_clubs_router,
+    reset_password::password_reset_router::get_reset_password_router,
     slot::slot_router::get_slot_router, users::users_router::get_users_router,
     zone::zone_router::get_zone_router,
 };
@@ -40,6 +41,7 @@ fn get_router(state: AppState) -> Router<AppState> {
         .merge(get_slot_router())
         .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
         .merge(get_auth_router())
+        .merge(get_reset_password_router())
         .layer(CorsLayer::permissive())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
         .layer(TraceLayer::new_for_http())
