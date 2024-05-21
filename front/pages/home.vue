@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center h-screen bg bg-cover">
     <!-- Colonne pour le formulaire d'inscription -->
     <div class="flex justify-center items-center w-1/2">
-      <div class="card p-8 shadow-xl rounded-lg">
+      <div class="card p-8 shadow-xl rounded-lg w-96">
         <h2 class="text-2xl font-bold mb-4 form-title">Rejoignez nous ! 🎾</h2>
         <form @submit.prevent="register" class="flex flex-col">
           <div class="mb-4">
@@ -24,7 +24,7 @@
 
     <!-- Colonne pour le formulaire de login -->
     <div class="flex justify-center items-center w-1/2">
-      <div class="card p-8 shadow-xl rounded-lg">
+      <div class="card p-8 shadow-xl rounded-lg w-96">
         <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
         <form @submit.prevent="login" class="flex flex-col">
           <div class="mb-4">
@@ -33,27 +33,11 @@
           <div class="mb-4">
             <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="passwordLogin" required>
           </div>
-          <a href="#" class="forgot-password-link self-end mb-4" @click.prevent="forgotPassword">Mot de passe oublié
-            ?</a>
+          <router-link to="password_reset" class="forgot-password-link self-end mb-4">Mot de passe oublié
+            ?</router-link>
           <button type="submit" class="btn btn-primary self-end">Login</button>
         </form>
       </div>
-    </div>
-  </div>
-
-  <!-- Colonne pour le formulaire de login -->
-  <div class="flex justify-center items-center w-1/2">
-    <div class="card p-8 shadow-xl rounded-lg">
-      <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
-      <form @submit.prevent="login" class="flex flex-col">
-        <div class="mb-4">
-          <input type="text" placeholder="Username" class="input w-full" v-model="usernameLogin" required />
-        </div>
-        <div class="mb-4">
-          <input type="password" placeholder="Password" class="input w-full" v-model="passwordLogin" required>
-        </div>
-        <button type="submit" class="btn btn-primary self-end">Login</button>
-      </form>
     </div>
   </div>
 </template>
@@ -178,7 +162,6 @@ const getPastClaims = async () => {
 
 <style scoped>
 .card {
-  width: 400px;
   background-color: rgba(56, 133, 100, 0.8);
 }
 

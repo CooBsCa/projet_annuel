@@ -2291,7 +2291,9 @@ dependencies = [
  "lettre 0.11.7",
  "lettre_email",
  "migration",
+ "rand 0.8.5",
  "sea-orm",
+ "sendmail",
  "serde",
  "serde_json",
  "tokio",
@@ -2991,6 +2993,12 @@ dependencies = [
  "core-foundation-sys",
  "libc",
 ]
+
+[[package]]
+name = "sendmail"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b534d6dc60c5df66cda0abd5ebaff07e208722bd0188211a03dd5a21812b9e4a"
 
 [[package]]
 name = "serde"

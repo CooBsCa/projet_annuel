@@ -12,14 +12,14 @@ use crate::{
         responses(
             (status = OK, description = "Email sender", body = PasswordResetDto),
         ),
-        tag = "reset_password",
+        tag = "password_reset",
     )]
 /// Register user
 pub async fn send_email(
     State(db): State<DbConn>,
     Json(send_email_dto): Json<PasswordResetDto>,
 ) -> Result<StatusCode, ApiError> {
-    let _ = password_reset_services::send_email(send_email_dto.email)
+    let _ = password_reset_services::send_email(&db, send_email_dto.email)
         .await
         .map_err(|_| ApiError::Internal);
     Ok(StatusCode::CREATED)

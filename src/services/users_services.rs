@@ -1,8 +1,10 @@
 extern crate bcrypt;
+extern crate rand;
 
 use bcrypt::{hash, verify, DEFAULT_COST};
 use entity::app_user::{self};
 use entity::club::{self};
+use rand::{distributions::Alphanumeric, Rng};
 use sea_orm::ColumnTrait;
 use sea_orm::Condition;
 use sea_orm::DbErr;
@@ -91,4 +93,33 @@ pub async fn search_user(
         Ok(false) => Err(DbErr::RecordNotFound(login_user_dto.password)),
         Err(_) => Err(DbErr::RecordNotFound(login_user_dto.password)),
     }
+}
+
+pub async fn user_exists_by_email(db: &DbConn, email: &str) -> Result<app_user::Model, DbErr> {
+    let user = app_user::Entity::find()
+        .filter(app_user::Column::Email.eq(email))
+        .one(db)
+        .await?;
+
+    user.ok_or(DbErr::RecordNotFound("Aucun utilisateur trouvé".to_string()).into())
+}
+
+pub async fn reset_password(
+    db: &DbConn,
+    user: app_user::Model,
+) -> Result<app_user::Model, anyhow::Error> {
+    let random_password: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(7)
+        .map(char::from)
+        .collect();
+
+    println!("random_password: {}", random_password);
+
+    let password_hash = hash(random_password, DEFAULT_COST)?;
+    let user = app_user::Entity::find_by_id(user.id).one(db).await?;
+    let mut user: app_user::ActiveModel = user.ok_or(anyhow::Error::msg("User not found"))?.into();
+    user.password = Set(password_hash);
+    let active = user.update(db).await?;
+    Ok(active.try_into_model()?)
 }

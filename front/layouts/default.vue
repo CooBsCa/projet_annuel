@@ -45,13 +45,14 @@
         </div>
 
         <!-- Main Content -->
-        <div class=" flex flex-col flex-1">
+        <div class="flex flex-col flex-1 overflow-auto">
             <!-- Header -->
             <div class="bg-primary shadow-md p-4 flex flex-row justify-between">
                 <h1 class="text-2xl font-bold">{{ club.name }}</h1>
                 <div class="flex justify-end items-center">
-                    <div class="text-xl">Réservations disponibles:</div>
-                    <div class="badge text-xl" :class="[claimsColor]">{{ availableClaimsNumber }}/{{
+                    <div class="text-xl">Réservations disponibles : </div>
+                    <div class="badge text-xl mx-2 py-4" :class="[claimsColor]">{{ availableClaimsNumber }}
+                        / {{
             totalClaimsNumber }}</div>
                 </div>
             </div>

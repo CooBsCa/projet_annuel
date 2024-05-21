@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     showLayout() {
-      return !['/home', '/home2'].includes(this.$route.path);
+      return !['/home', '/password_reset'].includes(this.$route.path);
     },
   },
   methods: {
