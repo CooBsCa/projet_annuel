@@ -11,10 +11,19 @@ pub struct Model {
     pub zone_id: i32,
     pub start_at: DateTime,
     pub end_at: DateTime,
+    pub opponent_user_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::app_user::Entity",
+        from = "Column::OpponentUserId",
+        to = "super::app_user::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    AppUser2,
     #[sea_orm(
         belongs_to = "super::app_user::Entity",
         from = "Column::UserId",
@@ -22,7 +31,7 @@ pub enum Relation {
         on_update = "NoAction",
         on_delete = "NoAction"
     )]
-    AppUser,
+    AppUser1,
     #[sea_orm(
         belongs_to = "super::zone::Entity",
         from = "Column::ZoneId",
@@ -31,12 +40,6 @@ pub enum Relation {
         on_delete = "NoAction"
     )]
     Zone,
-}
-
-impl Related<super::app_user::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::AppUser.def()
-    }
 }
 
 impl Related<super::zone::Entity> for Entity {

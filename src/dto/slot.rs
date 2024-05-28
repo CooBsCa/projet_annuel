@@ -53,4 +53,5 @@ pub struct ClaimSlotDto {
     pub zone_id: i32,
     pub start_at: NaiveDateTime,
     pub end_at: NaiveDateTime,
+    pub opponent_user_id: i32,
 }
