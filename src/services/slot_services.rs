@@ -122,6 +122,7 @@ pub async fn create_slot(
         zone_id: Set(data.zone_id),
         start_at: Set(data.start_at),
         end_at: Set(data.end_at),
+        opponent_user_id: Set(data.opponent_user_id),
         ..Default::default()
     };
     slot.save(db).await?.try_into_model()
@@ -145,6 +146,7 @@ mod tests {
             zone_id: 1,
             start_at: chrono::NaiveDateTime::parse_from_str(start, "%Y-%m-%d %H:%M:%S").unwrap(),
             end_at: chrono::NaiveDateTime::parse_from_str(end, "%Y-%m-%d %H:%M:%S").unwrap(),
+            opponent_user_id: 2,
         }
     }
 
