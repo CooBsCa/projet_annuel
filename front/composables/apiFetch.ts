@@ -4,7 +4,10 @@ export const apiFetch = async (request: any, opts?: any) => {
   const authStore = useAuthStore();
   let token = authStore.getToken();
 
-  if (token == "" || token == null) navigateTo("/home");
+  if (token == "" || token == null) {
+    console.error("No token found");
+    navigateTo("/home");
+  }
 
   const config = useRuntimeConfig();
 
@@ -19,6 +22,7 @@ export const apiFetch = async (request: any, opts?: any) => {
     return await fetch(config.public.baseURL + request, opts);
   } catch (error: any) {
     if (error.response && error.response.status === 401) {
+      console.error(error);
       navigateTo("/home");
     }
     throw error;

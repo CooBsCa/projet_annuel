@@ -2288,6 +2288,7 @@ dependencies = [
  "chrono",
  "dotenv",
  "entity",
+ "http",
  "lettre 0.11.7",
  "lettre_email",
  "migration",

@@ -18,23 +18,17 @@
         </div>
     </div>
 
-    <InfoModal :popUpParams="popUpParams"></InfoModal>
+    <Modal ref="deleteModale" @confirm="goToLogin">
+        <h2 class="text-black text-2xl font-bold mb-4">{{ popUpParams.title }}</h2>
+        <p class="text-black pb-5">{{ popUpParams.text }}</p>
+    </Modal>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useAuthStore } from '~/stores/auth'
-import { useClubStore } from '~/stores/club'
-import { useLevelStore } from '~/stores/level'
 
-const authStore = useAuthStore();
-const clubStore = useClubStore()
-const levelStore = useLevelStore()
+const deleteModale = ref()
 
-authStore.setToken("");
-
-const error = ref(false)
-const errorMessage = ref('')
 const popUpParams = ref({
     title: "Surveillez votre boîte 📩",
     text: "Si un compte existe a cette adresse, alors un mail a été envoyé",
@@ -43,20 +37,24 @@ const popUpParams = ref({
 const email = ref('')
 
 const showInfoModal = () => {
-    console.log("on passe ici ???? ")
-    InfoModal.showModal()
+    deleteModale.value.show()
+}
+
+const goToLogin = () => {
+    navigateTo("/home")
 }
 
 const password_reset = async (email) => {
     showInfoModal()
     try {
-        await apiPost("/password_reset", {
+        await fetch("/password_reset", {
+            method: "POST",
             body: JSON.stringify({
                 email: email
             }),
         });
     } catch (err) {
-        useNotifyStore.notify("Une erreur semble être survenue lors de l'envoi", NotificationType.Error);
+        // useNotifyStore.notify("Une erreur semble être survenue lors de l'envoi", NotificationType.Error);
         console.error(err)
     }
 }

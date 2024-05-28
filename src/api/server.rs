@@ -42,7 +42,7 @@ fn get_router(state: AppState) -> Router<AppState> {
         .route_layer(middleware::from_fn_with_state(state, auth_middleware::auth))
         .merge(get_auth_router())
         .merge(get_reset_password_router())
-        .layer(CorsLayer::permissive())
+        .layer(CorsLayer::very_permissive())
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDocs::openapi()))
         .layer(TraceLayer::new_for_http())
 }
