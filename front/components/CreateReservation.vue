@@ -21,9 +21,9 @@
                 <div class="mb-4">
                     Joueur adverse
                     <div>
-                        <select class="select select-error w-full max-w-xs">
+                        <select class="select select-error w-full max-w-xs" v-model="opponent_user">
                             <option disabled selected>Choisissez botre adversaire</option>
-                            <option v-for="user in users" :key="user.id">{{ user.username }}</option>
+                            <option v-for="user in users" :key="user.id" :value="user">{{ user.username }}</option>
                         </select>
                     </div>
                 </div>
@@ -44,10 +44,7 @@ const clubStore = useClubStore()
 const club = clubStore.getClub()
 const authStore = useAuthStore()
 const token = authStore.getToken()
-const nom = ref('')
-const open_at = ref('')
-const close_at = ref('')
-const reservation_time = ref('')
+const opponent_user = ref(null)
 let users = ref([])
 
 const props = defineProps({
@@ -59,23 +56,50 @@ const selectedSchedule = props.selectedSchedule
 
 const emit = defineEmits(['submit'])
 
-// const CreateReservation = async () => {
-//     try {
-//         await apiPost("/zone", {
-//             body: JSON.stringify({
-//                 club_id: club.id,
-//                 name: nom.value,
-//                 open_at: open_at.value,
-//                 close_at: close_at.value,
-//                 reservation_time: reservation_time.value,
-//             }),
-//         });
-//         emit('submit')
-//         document.getElementById('CreateReservationModal').close()
-//     } catch (err) {
-//         console.error(err)
-//     }
-// }
+const CreateReservation = async () => {
+    try {
+        const day = selectedSchedule.day;
+        const startAt = selectedSchedule.start_at;
+        const endAt = selectedSchedule.end_at;
+
+        // Combine day and time into a single Date object
+        const startDateTime = new Date(`${day}T${startAt}`);
+        const endDateTime = new Date(`${day}T${endAt}`);
+
+        // Format the date to match NaiveDateTime format without the 'Z' character
+        const formatDateTime = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+        };
+
+        const formattedStartAt = formatDateTime(startDateTime);
+        const formattedEndAt = formatDateTime(endDateTime);
+
+        console.log(selectedSchedule.zone_id);
+        console.log(formattedStartAt);
+        console.log(formattedEndAt);
+        console.log(opponent_user.value.id);
+
+        await apiPost("/claim-slot", {
+            body: JSON.stringify({
+                zone_id: selectedSchedule.zone_id,
+                start_at: formattedStartAt,
+                end_at: formattedEndAt,
+                opponent_user_id: opponent_user.value.id,
+            }),
+        });
+        emit('submit');
+        document.getElementById('CreateReservationModal').close();
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 const getAllUsers = async () => {
     const response = await apiGet('/users', {
@@ -84,7 +108,6 @@ const getAllUsers = async () => {
         },
     });
     const data = await response.json();
-    console.log(data);
     users.value = data;
 };
 

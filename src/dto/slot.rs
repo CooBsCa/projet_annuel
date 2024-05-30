@@ -48,7 +48,7 @@ impl From<slot::Model> for CreateSlotDto {
     }
 }
 
-#[derive(Serialize, Deserialize, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct ClaimSlotDto {
     pub zone_id: i32,
     pub start_at: NaiveDateTime,

@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./node_modules/flowbite/**/*.{js,ts}"],
+  content: [
+    "./node_modules/flowbite/**/*.{js,ts}"
+  ],
   plugins: [require('daisyui'),require('flowbite/plugin')],
   daisyui: {
     themes: [
@@ -15,6 +17,7 @@ export default {
           "primary-content": "#000000",
           "secondary-content": "#ffffff",
           "accent-content": "#ffffff",
+          "wimbledon-purple": "#3a0b7d"
         },
       },
       "dark",
