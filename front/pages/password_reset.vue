@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <Modal ref="deleteModale" @confirm="goToLogin">
+    <Modal ref="deleteModale" :showCancel="false" @confirm="goToLogin">
         <h2 class="text-black text-2xl font-bold mb-4">{{ popUpParams.title }}</h2>
         <p class="text-black pb-5">{{ popUpParams.text }}</p>
     </Modal>

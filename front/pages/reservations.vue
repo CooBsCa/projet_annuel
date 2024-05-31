@@ -70,7 +70,7 @@ const getZones = async () => {
     });
     const zones = await response.json();
     console.log(zones)
-    let slots = await getClaimedSlots()
+    let slots = await getClaimedSlots();
     console.log(slots)
     slots.forEach(element => {
         element.zone_name = zones.find(zone => zone.id === element.zone_id).name
@@ -82,7 +82,6 @@ const getClaimedSlots = async () => {
     try {
         const response = await apiGet('/claimed-slots', {
         });
-
         return await response.json()
     } catch (err) {
         console.error(err)

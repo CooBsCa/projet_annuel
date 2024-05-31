@@ -35,6 +35,12 @@
         </form>
     </dialog>
 
+
+    <Modal ref="deleteModale" :showCancel="false">
+        <h2 class=" text-black text-2xl font-bold mb-4">{{ popUpParams.title }}</h2>
+        <p class="text-black pb-5">{{ popUpParams.text }}</p>
+    </Modal>
+
 </template>
 
 <script setup>
@@ -46,11 +52,21 @@ const authStore = useAuthStore()
 const token = authStore.getToken()
 const opponent_user = ref(null)
 let users = ref([])
+const deleteModale = ref()
+
+const popUpParams = ref({
+    title: "Terrain réservé",
+    text: "Vous allez recevoir un email de confirmation. Bonne partie ! 🎾",
+});
 
 const props = defineProps({
     selectedSchedule: Object,
     required: true
 })
+
+const showInfoModal = () => {
+    deleteModale.value.show()
+}
 
 const selectedSchedule = props.selectedSchedule
 
@@ -95,6 +111,7 @@ const CreateReservation = async () => {
         });
         emit('submit');
         document.getElementById('CreateReservationModal').close();
+        showInfoModal();
     } catch (err) {
         console.error(err);
     }

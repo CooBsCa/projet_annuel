@@ -25,6 +25,11 @@
 
   <CreateReservation :selectedSchedule="selectedSchedule">
   </CreateReservation>
+
+  <Modal ref="alertModal" :showCancel="false">
+    <h2 class="text-black text-2xl font-bold mb-4">{{ popUpAlertParams.title }}</h2>
+    <p class="text-black pb-5">{{ popUpAlertParams.text }}</p>
+  </Modal>
 </template>
 
 <script setup>
@@ -40,6 +45,11 @@ const selectedSchedule = ref({
   day: '',
 });
 
+const popUpAlertParams = ref({
+  title: " ⛔️ Réservation Impossible",
+  text: "Vous avez atteint le nombre maximum de réservations",
+});
+
 const currentDate = new Date();
 const dateToday = currentDate.toISOString().split('T')[0];
 const formattedDate = ref(dateToday);
@@ -48,6 +58,10 @@ const clubStore = useClubStore()
 const club = clubStore.getClub()
 const date = ref(new Date());
 const zones = ref([]);
+const totalClaimsNumber = 2;
+const futurClaimsNumber = authStore.getFuturClaimsNumber()
+const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
+const alertModal = ref()
 
 const getZones = async () => {
   const response = await apiGet('/zones/' + club.id, {
@@ -58,15 +72,6 @@ const getZones = async () => {
   const data = await response.json();
   console.log(data);
   zones.value = data;
-};
-
-const getAvailableSlots = async () => {
-  const response = await apiGet('/slots', {
-    body: JSON.stringify({
-      date: date.value,
-    }),
-  });
-  const data = await response.json();
 };
 
 const slots = (data) => {
@@ -114,13 +119,17 @@ const emptySlots = () => {
 };
 
 const handleSlotClick = (slot, court, slotIndex) => {
+  if (availableClaimsNumber.value === 0) {
+    showAlertModal()
+    return;
+  }
   console.log(`Créneau ${slot} cliqué pour le court ${court}`);
   selectedSchedule.value.zone_id = court.id;
   selectedSchedule.value.zone = court.name;
   selectedSchedule.value.start_at = slot.start_at;
   selectedSchedule.value.end_at = slot.end_at;
   selectedSchedule.value.day = formattedDate.value;
-  CreateReservationModal.showModal();
+  CreateReservationModal.showModal()
 };
 
 const isCurrentHourSlot = (slotIndex) => {
@@ -148,6 +157,10 @@ const decrementDate = () => {
   formattedDate.value = newDate.toISOString().split('T')[0];
   getZones();
 };
+
+const showAlertModal = () => {
+  alertModal.value.show()
+}
 
 getZones()
 </script>
