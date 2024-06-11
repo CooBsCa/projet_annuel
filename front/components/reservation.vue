@@ -12,7 +12,8 @@
             </div>
         </div>
     </div>
-    <Modal ref="deleteModale" @confirm="deleteReservation">Voulez-vous vraiment annuler la réservation du {{ date_txt }}
+    <Modal ref="deleteModale" @confirm="deleteReservation">Voulez-vous vraiment annuler la réservation du {{ date_txt
+        }}
         de {{ start_at_txt }} à {{
         end_at_txt }} ?
     </Modal>
@@ -20,6 +21,8 @@
 
 <script setup>
 import { useAuthStore } from '~/stores/auth';
+import { defineEmits } from 'vue';
+const emit = defineEmits(['delete']);
 const authStore = useAuthStore();
 const props = defineProps({
     reservation: Object,
@@ -30,8 +33,8 @@ const date_txt = ref("")
 const start_at_txt = ref("")
 const end_at_txt = ref("")
 const isPast = computed(() => {
-    return new Date() > reservation.start_at
-})
+    return new Date() > new Date(reservation.start_at);
+});
 const deleteModale = ref()
 
 const modaleDelete = () => {
@@ -49,10 +52,15 @@ const deleteReservation = async () => {
 }
 
 onMounted(() => {
-    date_txt.value = reservation.start_at.toLocaleDateString("fr-FR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-    start_at_txt.value = reservation.start_at.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })
-    end_at_txt.value = reservation.end_at.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })
-})
+    const startDate = new Date(reservation.start_at);
+    const endDate = new Date(reservation.end_at);
+    date_txt.value = startDate.toLocaleDateString("fr-FR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    start_at_txt.value = startDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    end_at_txt.value = endDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+});
+
+
+
 
 
 const getAvailableClaims = async () => {

@@ -1,24 +1,34 @@
 <template>
-  <nav class="navbar text-right bg-wimbledon-purple">
-    <button @click="decrementDate" class="arrow-button">&#9664;</button>
-    <input id="date" type="date"
-      class="block p-3 text-lg border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400 mb-4"
-      v-model="formattedDate" />
-    <button @click="incrementDate" class="arrow-button">&#9654;</button>
-  </nav>
+  <div class="navbar wimbledon-purple">
+    <div class="flex-1">
+      <div class="text-bl text-lg font-bold">Terrains disponibles</div>
+    </div>
+    <div class="flex-none">
+      <button @click="decrementDate" class="block left-0 m-3 text-2xl bg-transparent border-none cursor-pointer">
+        <div class="img2" v-if="isPreviousAvailable()"></div>
+      </button>
+      <input id="date" type="date"
+        class="block p-3 text-lg border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400 mb-4"
+        v-model="formattedDate" />
+      <button @click="incrementDate" class="block right-0 m-3 text-2xl bg-transparent border-none cursor-pointer">
+        <div class="img1"></div>
+      </button>
+    </div>
+  </div>
+
   <div class="calendar">
     <div class="day">
-      <div v-for="(zone, index) in zones" :key="index" class="court-column">
+      <div v-for="( zone, index ) in  zones " :key="index" class="court-column">
         <div class="court-name">{{ zone.name }}</div>
         <span class="text-center" v-if="slots(zone).length == 0">Aucun créneau disponible</span>
-        <div v-for="(slot, slotIndex) in slots(zone)" :key="slotIndex"
+        <div v-for="( slot, slotIndex ) in  slots(zone) " :key="slotIndex"
           :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex) }" @click="handleSlotClick(slot,
-      zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
+        zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
           <span v-if="!isCurrentHourSlot(slotIndex)">{{ slot.start_at }} </span>
           <span v-if="isCurrentHourSlot(slotIndex)">🚫 {{ slot.start_at }} 🚫</span>
         </div>
         <div class="court-name">{{ zone.name }}</div>
-        <div class="empty-slot" v-if="emptySlots.length > 0" v-for="n in emptySlots" :key="n"></div>
+        <div class="empty-slot" v-if="emptySlots.length > 0" v-for=" n  in  emptySlots " :key="n"></div>
       </div>
     </div>
   </div>
@@ -58,6 +68,7 @@ const clubStore = useClubStore()
 const club = clubStore.getClub()
 const date = ref(new Date());
 const zones = ref([]);
+const reservedSlots = ref([]);
 const totalClaimsNumber = 2;
 const futurClaimsNumber = authStore.getFuturClaimsNumber()
 const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
@@ -78,6 +89,7 @@ const slots = (data) => {
   let startHour = '';
   const calendarDate = new Date(date.value).toISOString().split('T')[0];
   const dateOfTheDay = new Date().toISOString().split('T')[0];
+
   if (calendarDate != dateOfTheDay) {
     startHour = data.open_at.split(":")[0];
   } else {
@@ -133,7 +145,11 @@ const handleSlotClick = (slot, court, slotIndex) => {
 };
 
 const isCurrentHourSlot = (slotIndex) => {
-  return Math.floor(slotIndex === 0);
+  const calendarDate = new Date(date.value).toISOString().split('T')[0];
+  const dateOfTheDay = new Date().toISOString().split('T')[0];
+  if (calendarDate == dateOfTheDay) {
+    return Math.floor(slotIndex === 0);
+  }
 };
 
 const euclideanDivision = (dividend, divisor) => {
@@ -162,6 +178,23 @@ const showAlertModal = () => {
   alertModal.value.show()
 }
 
+const isPreviousAvailable = () => {
+  return new Date(date.value) > new Date();
+}
+
+const getClaimedSlots = async () => {
+  try {
+    const response = await apiGet('/claimed-slots', {
+    });
+    const data = await response.json();
+    console.log(data);
+    reservedSlots.value = data;
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+getClaimedSlots()
 getZones()
 </script>
 
@@ -215,5 +248,19 @@ getZones()
 .current-hour-slot {
   background-color: #ccc;
   pointer-events: none;
+}
+
+.img1 {
+  background-image: url('../../images/fleche_droite.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+}
+
+.img2 {
+  background-image: url('../../images/fleche_gauche.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
 }
 </style>

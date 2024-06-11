@@ -22,7 +22,7 @@
                     Joueur adverse
                     <div>
                         <select class="select select-error w-full max-w-xs" v-model="opponent_user">
-                            <option disabled selected>Choisissez botre adversaire</option>
+                            <option disabled selected>Choisissez votre adversaire</option>
                             <option v-for="user in users" :key="user.id" :value="user">{{ user.username }}</option>
                         </select>
                     </div>
@@ -111,6 +111,7 @@ const CreateReservation = async () => {
         });
         emit('submit');
         document.getElementById('CreateReservationModal').close();
+        getAvailableClaims();
         showInfoModal();
     } catch (err) {
         console.error(err);
@@ -127,6 +128,17 @@ const getAllUsers = async () => {
     const data = await response.json();
     users.value = data;
 };
+
+const getAvailableClaims = async () => {
+    try {
+        const response = await apiGet("/future-claimed-slots", {
+        });
+        const data = await response.json();
+        authStore.setFuturClaimsNumber(data)
+    } catch (error) {
+        console.error("Erreur de connexion:", error);
+    }
+}
 
 getAllUsers()
 </script>
