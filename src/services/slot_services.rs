@@ -1,6 +1,7 @@
 use crate::dto::slot::ClaimSlotDto;
 use crate::dto::slot::CreateSlotDto;
 use crate::dto::slot::QuerySlotDto;
+use crate::dto::slot::RequestSlotsOfDayDto;
 use crate::utils::date_utils::get_days_between_dates;
 use crate::utils::date_utils::split_day_into_slots;
 use crate::utils::periode_utils::is_period_overlap;
@@ -52,6 +53,19 @@ pub fn is_slot_available(claimed_slots: &[slot::Model], slot: &CreateSlotDto) ->
 pub async fn get_claimed_slots(db: &DbConn, user_id: i32) -> Result<Vec<slot::Model>, DbErr> {
     slot::Entity::find()
         .filter(slot::Column::UserId.eq(user_id))
+        .all(db)
+        .await
+}
+
+pub async fn get_all_claimed_slots_by_day(
+    db: &DbConn,
+    data: RequestSlotsOfDayDto,
+) -> Result<Vec<slot::Model>, DbErr> {
+    // Query to get all slots for a day
+    print!("on passe ici");
+    slot::Entity::find()
+        .filter(slot::Column::StartAt.gte(data.start_of_day))
+        .filter(slot::Column::StartAt.lte(data.end_of_day))
         .all(db)
         .await
 }

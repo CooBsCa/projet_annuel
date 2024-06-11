@@ -55,3 +55,9 @@ pub struct ClaimSlotDto {
     pub end_at: NaiveDateTime,
     pub opponent_user_id: i32,
 }
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct RequestSlotsOfDayDto {
+    pub start_of_day: NaiveDateTime,
+    pub end_of_day: NaiveDateTime,
+}

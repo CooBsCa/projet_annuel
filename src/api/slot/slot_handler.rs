@@ -8,7 +8,7 @@ use crate::{
     api::api_error::ApiError,
     dto::{
         app_user::AppUserDto,
-        slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, SlotDto},
+        slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, RequestSlotsOfDayDto, SlotDto},
     },
     services::slot_services,
 };
@@ -48,6 +48,27 @@ pub async fn get_claimed_slots(
 ) -> Result<Json<Vec<SlotDto>>, ApiError> {
     Ok(Json(
         slot_services::get_claimed_slots(&db, usr.id)
+            .await
+            .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
+            .map_err(|_| ApiError::Internal)?,
+    ))
+}
+
+//Get slots claimed of the day
+#[utoipa::path(
+        post,
+        path = "/claimed-slots-by-day",
+        responses(
+            (status = OK, description = "Get claimed slot for the day", body = Vec<SlotDto>),
+        ),
+        tag = "Slot",
+    )]
+pub async fn get_claimed_slots_by_day(
+    State(db): State<DbConn>,
+    Json(data): Json<RequestSlotsOfDayDto>,
+) -> Result<Json<Vec<SlotDto>>, ApiError> {
+    Ok(Json(
+        slot_services::get_all_claimed_slots_by_day(&db, data)
             .await
             .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
             .map_err(|_| ApiError::Internal)?,

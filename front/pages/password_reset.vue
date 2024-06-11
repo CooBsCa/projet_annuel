@@ -47,14 +47,17 @@ const goToLogin = () => {
 const password_reset = async (email) => {
     showInfoModal()
     try {
-        await fetch("/password_reset", {
-            method: "POST",
+        await fetch('http://localhost:3001/password_reset', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 email: email
             }),
         });
     } catch (err) {
-        // useNotifyStore.notify("Une erreur semble être survenue lors de l'envoi", NotificationType.Error);
         console.error(err)
     }
 }

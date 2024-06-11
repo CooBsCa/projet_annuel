@@ -1,6 +1,4 @@
-use crate::api::{reset_password, users};
 use crate::services::users_services;
-use entity::app_user::{self};
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 use sea_orm::DbConn;
@@ -37,7 +35,7 @@ pub async fn send_email(db: &DbConn, mail_target: String) -> Result<(), DbErr> {
                 .unwrap()
                 .credentials(creds)
                 .build();
-
+            print!("Sending email...");
             match mailer.send(&email) {
                 Ok(_) => println!("Email sent successfully!"),
                 Err(e) => eprintln!("Could not send email: {:?}", e),

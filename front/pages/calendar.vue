@@ -18,17 +18,19 @@
 
   <div class="calendar">
     <div class="day">
-      <div v-for="( zone, index ) in  zones " :key="index" class="court-column">
+      <div v-for="( zone, index ) in   zones  " :key="index" class="court-column">
         <div class="court-name">{{ zone.name }}</div>
         <span class="text-center" v-if="slots(zone).length == 0">Aucun créneau disponible</span>
-        <div v-for="( slot, slotIndex ) in  slots(zone) " :key="slotIndex"
-          :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex) }" @click="handleSlotClick(slot,
+        <div v-for="( slot, slotIndex ) in   slots(zone)  " :key="slotIndex"
+          :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex), 'bg-red-500 pointer-events-none': isReserved(slot, zone) }"
+          @click="handleSlotClick(slot,
         zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
-          <span v-if="!isCurrentHourSlot(slotIndex)">{{ slot.start_at }} </span>
-          <span v-if="isCurrentHourSlot(slotIndex)">🚫 {{ slot.start_at }} 🚫</span>
+          <span v-if="!isCurrentHourSlot(slotIndex) && !isReserved(slot, zone)">{{ slot.start_at }} </span>
+          <span v-if="isCurrentHourSlot(slotIndex) && !isReserved(slot, zone)">🚫 {{ slot.start_at }} 🚫</span>
+          <span v-if="isReserved(slot, zone)">Réservé</span>
         </div>
         <div class="court-name">{{ zone.name }}</div>
-        <div class="empty-slot" v-if="emptySlots.length > 0" v-for=" n  in  emptySlots " :key="n"></div>
+        <div class="empty-slot" v-if="emptySlots.length > 0" v-for="  n   in   emptySlots  " :key="n"></div>
       </div>
     </div>
   </div>
@@ -182,9 +184,25 @@ const isPreviousAvailable = () => {
   return new Date(date.value) > new Date();
 }
 
-const getClaimedSlots = async () => {
+const formatDate = (date, hour, minute, seconds) => {
+  const split = date.split('-');
+  const year = String(split[0]);
+  const month = String(split[1]).padStart(2, '0');
+  const day = String(split[2]).padStart(2, '0');
+  return `${year}-${month}-${day}T${hour}:${minute}:${seconds}`;
+};
+
+const getAllClaimedSlots = async () => {
   try {
-    const response = await apiGet('/claimed-slots', {
+    const formattedStartAt = formatDate(dateToday, '00', '00', '00');
+    const formattedEndAt = formatDate(dateToday, '23', '59', '59');
+    console.log(formattedStartAt);
+    console.log(formattedEndAt);
+    const response = await apiPost("/claimed-slots-by-day", {
+      body: JSON.stringify({
+        start_of_day: formattedStartAt,
+        end_of_day: formattedEndAt,
+      }),
     });
     const data = await response.json();
     console.log(data);
@@ -194,7 +212,14 @@ const getClaimedSlots = async () => {
   }
 }
 
-getClaimedSlots()
+const isReserved = (slot, zone) => {
+  return reservedSlots.value.some((reservedSlot) => {
+    const slot_start_split = slot.start_at.split(":")
+    return (reservedSlot.start_at === formatDate(dateToday, slot_start_split[0], slot_start_split[1], '00') && reservedSlot.zone_id === zone.id);
+  });
+}
+
+getAllClaimedSlots()
 getZones()
 </script>
 

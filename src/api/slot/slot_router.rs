@@ -24,6 +24,10 @@ pub fn get_slot_router() -> Router<AppState> {
             get(slot_handler::get_past_claimed_slots),
         )
         .route("/cancel-slot/:id", delete(slot_handler::cancel_slot))
+        .route(
+            "/claimed-slots-by-day",
+            post(slot_handler::get_claimed_slots_by_day),
+        )
 
     // .route("/slots/{zone_id}", get(get_slots_by_zone))
 }
