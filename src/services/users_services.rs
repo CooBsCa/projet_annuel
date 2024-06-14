@@ -20,6 +20,15 @@ pub async fn get_users(db: &DbConn) -> Result<Vec<app_user::Model>, anyhow::Erro
     app_user::Entity::find().all(db).await.map_err(|e| e.into())
 }
 
+pub async fn get_user_by_id(db: &DbConn, id: i32) -> Result<app_user::Model, anyhow::Error> {
+    app_user::Entity::find_by_id(id)
+        .one(db)
+        .await?
+        .ok_or(anyhow::Error::msg("User not found"))?
+        .try_into_model()
+        .map_err(|e| e.into())
+}
+
 pub async fn create_user(
     db: &DbConn,
     create_user_dto: CreateUserDto,

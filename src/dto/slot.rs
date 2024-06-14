@@ -10,6 +10,7 @@ pub struct SlotDto {
     pub zone_id: i32,
     pub start_at: NaiveDateTime,
     pub end_at: NaiveDateTime,
+    pub opponent_user_id: i32,
 }
 
 impl From<slot::Model> for SlotDto {
@@ -20,6 +21,7 @@ impl From<slot::Model> for SlotDto {
             zone_id: value.zone_id,
             start_at: value.start_at,
             end_at: value.end_at,
+            opponent_user_id: value.opponent_user_id,
         }
     }
 }

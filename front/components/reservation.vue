@@ -7,6 +7,7 @@
             <h2 class="card-title">{{ reservation.zone_name }}</h2>
             <p>{{ date_txt }}</p>
             <p>{{ start_at_txt }} - {{ end_at_txt }}</p>
+            <p>Partie avec {{ opponentName }}</p>
             <div class="card-actions justify-end" v-if="!isPast">
                 <button class="btn btn-accent text-accent-content" @click="modaleDelete">Annuler</button>
             </div>
@@ -24,6 +25,8 @@ import { useAuthStore } from '~/stores/auth';
 import { defineEmits } from 'vue';
 const emit = defineEmits(['delete']);
 const authStore = useAuthStore();
+const authToken = authStore.getToken();
+const opponentName = ref('');
 const props = defineProps({
     reservation: Object,
     required: true
@@ -57,11 +60,24 @@ onMounted(() => {
     date_txt.value = startDate.toLocaleDateString("fr-FR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     start_at_txt.value = startDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
     end_at_txt.value = endDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
+    getOpponentName(reservation.opponent_user_id);
 });
 
 
+const getOpponentName = async (opponent_user_id) => {
+    const response = await apiGet('/user/' + opponent_user_id, {
+        headers: {
+            Authorization: `Bearer ${authToken}`,
+        },
+    });
+    const data = await response.json();
+    console.log(data);
+    opponentName.value = capitalizeFirstLetter(data.username);
+};
 
-
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
 
 const getAvailableClaims = async () => {
     try {
