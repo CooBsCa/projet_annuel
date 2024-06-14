@@ -40,6 +40,11 @@
       </div>
     </div>
   </div>
+
+  <Modal ref="errorModal" :showCancel="false" @confirm="goToLogin">
+    <h2 class="text-black text-2xl font-bold mb-4">{{ popUpParams.title }}</h2>
+    <p class="text-black pb-5">{{ popUpParams.text }}</p>
+  </Modal>
 </template>
 
 <script setup>
@@ -48,9 +53,16 @@ import { useAuthStore } from '~/stores/auth'
 import { useClubStore } from '~/stores/club'
 import { useLevelStore } from '~/stores/level'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 const clubStore = useClubStore()
 const levelStore = useLevelStore()
+
+const errorModal = ref()
+const popUpParams = ref({
+  title: "",
+  text: "",
+});
+
 
 authStore.setToken("");
 
@@ -88,7 +100,8 @@ const login = async () => {
   } catch (err) {
     error.value = true
     console.error(err)
-    errorMessage.value = 'Impossible de se connecter, veuillez réessayer.'
+    errorMessage.value = 'Impossible de se connecter, email ou mot de passe incorrect veuillez réessayer.'
+    showErrorModal("de connexion")
   }
 }
 const register = async () => {
@@ -120,6 +133,7 @@ const register = async () => {
     error.value = true
     console.error(err)
     errorMessage.value = 'Impossible de créer le compte, veuillez réessayer.'
+    showErrorModal("d'inscription")
   }
 }
 const getClub = async () => {
@@ -156,6 +170,17 @@ const getPastClaims = async () => {
   } catch (error) {
     console.error("Erreur de connexion:", error);
   }
+}
+
+const goToLogin = () => {
+  error.value = false
+}
+
+const showErrorModal = (input) => {
+  popUpParams.value.title = "Erreur lors de la tentative " + input
+  popUpParams.value.text = errorMessage.value
+  errorModal.value.show()
+  error.value = false
 }
 
 </script>
