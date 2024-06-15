@@ -165,6 +165,7 @@ const incrementDate = () => {
   newDate.setDate(newDate.getDate() + 1);
   date.value = newDate;
   formattedDate.value = newDate.toISOString().split('T')[0];
+  getAllClaimedSlots();
   getZones();
 };
 
@@ -173,6 +174,7 @@ const decrementDate = () => {
   newDate.setDate(newDate.getDate() - 1);
   date.value = newDate;
   formattedDate.value = newDate.toISOString().split('T')[0];
+  getAllClaimedSlots();
   getZones();
 };
 
@@ -194,10 +196,8 @@ const formatDate = (date, hour, minute, seconds) => {
 
 const getAllClaimedSlots = async () => {
   try {
-    const formattedStartAt = formatDate(dateToday, '00', '00', '00');
-    const formattedEndAt = formatDate(dateToday, '23', '59', '59');
-    console.log(formattedStartAt);
-    console.log(formattedEndAt);
+    const formattedStartAt = formatDate(formattedDate.value, '00', '00', '00');
+    const formattedEndAt = formatDate(formattedDate.value, '23', '59', '59');
     const response = await apiPost("/claimed-slots-by-day", {
       body: JSON.stringify({
         start_of_day: formattedStartAt,
@@ -205,6 +205,7 @@ const getAllClaimedSlots = async () => {
       }),
     });
     const data = await response.json();
+    console.log("claimed slots :")
     console.log(data);
     reservedSlots.value = data;
   } catch (err) {
@@ -215,7 +216,7 @@ const getAllClaimedSlots = async () => {
 const isReserved = (slot, zone) => {
   return reservedSlots.value.some((reservedSlot) => {
     const slot_start_split = slot.start_at.split(":")
-    return (reservedSlot.start_at === formatDate(dateToday, slot_start_split[0], slot_start_split[1], '00') && reservedSlot.zone_id === zone.id);
+    return (reservedSlot.start_at === formatDate(formattedDate.value, slot_start_split[0], slot_start_split[1], '00') && reservedSlot.zone_id === zone.id);
   });
 }
 

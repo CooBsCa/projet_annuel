@@ -42,6 +42,9 @@
 
                 </ul>
             </div>
+            <nuxt-link to="/home" class="absolute bottom-0 mb-4 ml-4 text-2xl bg-transparent border-none">
+                <div class="imgLogout"></div>
+            </nuxt-link>
         </div>
 
         <!-- Main Content -->
@@ -126,3 +129,12 @@ export default {
     }
 };
 </script>
+
+<style>
+.imgLogout {
+    background-image: url('../../images/Logout.png');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+}
+</style>
