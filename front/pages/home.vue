@@ -1,5 +1,9 @@
 <template>
+  <header class="flex justify-center items-center py-4 bg-header">
+    <h1 class="text-4xl font-site">Central Court</h1>
+  </header>
   <div class="flex justify-center items-center h-screen bg bg-cover">
+
     <!-- Colonne pour le formulaire d'inscription -->
     <div class="flex justify-center items-center w-1/2">
       <div class="card p-8 shadow-xl rounded-lg w-96">
@@ -186,6 +190,8 @@ const showErrorModal = (input) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
 .card {
   background-color: rgba(56, 133, 100, 0.8);
 }
@@ -209,15 +215,23 @@ const showErrorModal = (input) => {
 
 
 .btn-primary {
-  background-color: rgba(225, 96, 205, 1);
-  border: rgba(225, 96, 205, 1);
-  color: rgba(58, 11, 125, 1);
+  background-color: rgba(58, 11, 125, 0.9);
+  border: rgba(58, 11, 125, 0.9);
+  color: rgba(225, 96, 205, 1);
 }
-
 
 .forgot-password-link {
   color: rgba(254, 237, 107, 1);
   font-size: 14px;
   text-decoration: underline;
+}
+
+.bg-header {
+  background-color: rgba(58, 11, 125, 0.9);
+}
+
+.font-site {
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(254, 237, 107, 1);
 }
 </style>
