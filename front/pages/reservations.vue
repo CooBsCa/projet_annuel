@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 gap-4">
             <h1 class="text-2xl font-bold">Vos réservations</h1>
             <template v-for="slot in claimedSlots" :key="slot.id">
-                <Reservation @delete="getClaimedSlots" :reservation="slot" />
+                <Reservation @delete="getZones" :reservation="slot" />
             </template>
         </div>
         <div class="grow flex flex-col items-center">

@@ -1,5 +1,5 @@
-<template>
-  <div class="navbar wimbledon-purple">
+<template data-theme="wimbledon">
+  <div class="navbar">
     <div class="flex-1">
       <div class="text-bl text-lg font-bold">Terrains disponibles</div>
     </div>
@@ -22,7 +22,7 @@
         <div class="court-name">{{ zone.name }}</div>
         <span class="text-center" v-if="slots(zone).length == 0">Aucun créneau disponible</span>
         <div v-for="( slot, slotIndex ) in   slots(zone)  " :key="slotIndex"
-          :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex), 'bg-red-500 pointer-events-none': isReserved(slot, zone) }"
+          :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex), 'slotReserved text-white pointer-events-none': isReserved(slot, zone) }"
           @click="handleSlotClick(slot,
         zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
           <span v-if="!isCurrentHourSlot(slotIndex) && !isReserved(slot, zone)">{{ slot.start_at }} </span>
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <CreateReservation :selectedSchedule="selectedSchedule">
+  <CreateReservation :selectedSchedule="selectedSchedule" @submit="onReservationSubmit">
   </CreateReservation>
 
   <Modal ref="alertModal" :showCancel="false">
@@ -220,6 +220,11 @@ const isReserved = (slot, zone) => {
   });
 }
 
+const onReservationSubmit = () => {
+  getZones();
+  getAllClaimedSlots();
+}
+
 getAllClaimedSlots()
 getZones()
 </script>
@@ -230,6 +235,10 @@ getZones()
   display: flex;
   flex-direction: column;
   min-width: 100%;
+}
+
+.slotReserved {
+  background-color: rgba(58, 11, 125, 0.9);
 }
 
 .day {

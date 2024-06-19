@@ -17,7 +17,7 @@ export default {
           "primary-content": "#000000",
           "secondary-content": "#ffffff",
           "accent-content": "#ffffff",
-          "wimbledon-purple": "#3a0b7d"
+          "wimbledonpurple": "#3a0b7d"
         },
       },
       "dark",
