@@ -22,12 +22,12 @@
         <div class="court-name">{{ zone.name }}</div>
         <span class="text-center" v-if="slots(zone).length == 0">Aucun créneau disponible</span>
         <div v-for="( slot, slotIndex ) in   slots(zone)  " :key="slotIndex"
-          :class="{ 'slot': true, 'current-hour-slot': isCurrentHourSlot(slotIndex), 'slotReserved text-white pointer-events-none': isReserved(slot, zone) }"
+          :class="{ 'slot': true, 'current-hour-slot': slot.isCurrentHour, 'slotReserved text-white pointer-events-none': slot.isReserved }"
           @click="handleSlotClick(slot,
         zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
-          <span v-if="!isCurrentHourSlot(slotIndex) && !isReserved(slot, zone)">{{ slot.start_at }} </span>
-          <span v-if="isCurrentHourSlot(slotIndex) && !isReserved(slot, zone)">🚫 {{ slot.start_at }} 🚫</span>
-          <span v-if="isReserved(slot, zone)">Réservé</span>
+          <span v-if="!slot.isCurrentHour && !slot.isReserved">{{ slot.start_at }} </span>
+          <span v-if="slot.isCurrentHour && !slot.isReserved">🚫 {{ slot.start_at }} 🚫</span>
+          <span v-if="slot.isReserved">{{ slot.user_name + " - " + slot.opponent_user_name }}</span>
         </div>
         <div class="court-name">{{ zone.name }}</div>
         <div class="empty-slot" v-if="emptySlots.length > 0" v-for="  n   in   emptySlots  " :key="n"></div>
@@ -76,6 +76,10 @@ const futurClaimsNumber = authStore.getFuturClaimsNumber()
 const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
 const alertModal = ref()
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+
 const getZones = async () => {
   const response = await apiGet('/zones/' + club.id, {
     headers: {
@@ -110,7 +114,7 @@ const slots = (data) => {
 
   const slot_duration = (euclideanDivision(data.reservation_time, 60)[0]);
   const totalSlots = euclideanDivision((parseInt(close_at) - parseInt(startHour)), slot_duration)[0];
-  return Array.from({ length: totalSlots }, (_, index) => {
+  let slots = Array.from({ length: totalSlots }, (_, index) => {
     const hour = parseInt(startHour) + (index * slot_duration);
     const end_at = parseInt(hour) + parseInt(slot_duration);
     return {
@@ -119,6 +123,23 @@ const slots = (data) => {
       slot_duration
     };
   });
+
+  for (let i = 0; i < slots.length; i++) {
+    let matchingSlot = findMatching(slots[i], data);
+    if (matchingSlot) {
+      slots[i].isReserved = true;
+      slots[i].user_name = capitalizeFirstLetter(matchingSlot.user_name);
+      slots[i].opponent_user_name = capitalizeFirstLetter(matchingSlot.opponent_user_name);
+    }
+  }
+
+  for (let i = 0; i < slots.length; i++) {
+    if (isCurrentHourSlot(i)) {
+      slots[i].isCurrentHour = true;
+    }
+  }
+
+  return slots;
 };
 
 const slotHeight = (slot_duration) => {
@@ -213,8 +234,8 @@ const getAllClaimedSlots = async () => {
   }
 }
 
-const isReserved = (slot, zone) => {
-  return reservedSlots.value.some((reservedSlot) => {
+const findMatching = (slot, zone) => {
+  return reservedSlots.value.find((reservedSlot) => {
     const slot_start_split = slot.start_at.split(":")
     return (reservedSlot.start_at === formatDate(formattedDate.value, slot_start_split[0], slot_start_split[1], '00') && reservedSlot.zone_id === zone.id);
   });

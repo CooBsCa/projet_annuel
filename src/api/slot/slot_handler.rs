@@ -10,7 +10,10 @@ use crate::{
         app_user::AppUserDto,
         slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, RequestSlotsOfDayDto, SlotDto},
     },
-    services::slot_services,
+    services::{
+        slot_services::{self, get_slot_dto, get_slots_dto},
+        users_services::get_user_by_id,
+    },
 };
 
 #[utoipa::path(
@@ -46,12 +49,13 @@ pub async fn get_claimed_slots(
     State(db): State<DbConn>,
     Extension(usr): Extension<AppUserDto>,
 ) -> Result<Json<Vec<SlotDto>>, ApiError> {
-    Ok(Json(
-        slot_services::get_claimed_slots(&db, usr.id)
-            .await
-            .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
-            .map_err(|_| ApiError::Internal)?,
-    ))
+    let claimed_slots = slot_services::get_claimed_slots(&db, usr.id)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    let dtos = get_slots_dto(claimed_slots, &db)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    Ok(Json(dtos))
 }
 
 //Get slots claimed of the day
@@ -67,12 +71,13 @@ pub async fn get_claimed_slots_by_day(
     State(db): State<DbConn>,
     Json(data): Json<RequestSlotsOfDayDto>,
 ) -> Result<Json<Vec<SlotDto>>, ApiError> {
-    Ok(Json(
-        slot_services::get_all_claimed_slots_by_day(&db, data)
-            .await
-            .map(|slots| slots.into_iter().map(|slot| slot.into()).collect())
-            .map_err(|_| ApiError::Internal)?,
-    ))
+    let claimed_slots = slot_services::get_all_claimed_slots_by_day(&db, data)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    let dtos = get_slots_dto(claimed_slots, &db)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    Ok(Json(dtos))
 }
 
 #[utoipa::path(
@@ -92,11 +97,13 @@ pub async fn claim_slot(
         .await
         .map_err(|_| ApiError::Internal)?;
 
-    slot_services::claim_slot(&db, slot.id, slot.user_id)
+    let claimed_slot = slot_services::claim_slot(&db, slot.id, slot.user_id)
         .await
-        .map(|slot| slot.into())
-        .map(Json)
-        .map_err(|_| ApiError::NotFound)
+        .map_err(|_| ApiError::NotFound)?;
+    let dto = get_slot_dto(claimed_slot, &db)
+        .await
+        .map_err(|_| ApiError::Internal)?;
+    Ok(Json(dto))
 }
 
 #[utoipa::path(

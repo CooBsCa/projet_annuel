@@ -2,6 +2,7 @@ use crate::dto::slot::ClaimSlotDto;
 use crate::dto::slot::CreateSlotDto;
 use crate::dto::slot::QuerySlotDto;
 use crate::dto::slot::RequestSlotsOfDayDto;
+use crate::dto::slot::SlotDto;
 use crate::utils::date_utils::get_days_between_dates;
 use crate::utils::date_utils::split_day_into_slots;
 use crate::utils::periode_utils::is_period_overlap;
@@ -17,6 +18,8 @@ use sea_orm::QueryFilter;
 use sea_orm::Set;
 use sea_orm::TryIntoModel;
 use sea_orm::{DbConn, DbErr};
+
+use super::users_services::get_user_by_id;
 
 pub async fn get_available_slots(
     db: &DbConn,
@@ -73,6 +76,34 @@ pub async fn get_all_claimed_slots_by_day(
         .filter(slot::Column::StartAt.lte(data.end_of_day))
         .all(db)
         .await
+}
+
+pub async fn get_slots_dto(slots: Vec<slot::Model>, db: &DbConn) -> Result<Vec<SlotDto>, DbErr> {
+    let mut slots_dto = vec![];
+    for slot in slots {
+        slots_dto.push(get_slot_dto(slot, db).await?);
+    }
+    Ok(slots_dto)
+}
+
+pub async fn get_slot_dto(slot: slot::Model, db: &DbConn) -> Result<SlotDto, DbErr> {
+    let user = get_user_by_id(db, slot.user_id)
+        .await
+        .map_err(|e| DbErr::RecordNotFound(e.to_string()))?;
+    let opponent_user = get_user_by_id(db, slot.opponent_user_id)
+        .await
+        .map_err(|e| DbErr::RecordNotFound(e.to_string()))?;
+
+    Ok(SlotDto {
+        id: slot.id,
+        user_id: slot.user_id,
+        zone_id: slot.zone_id,
+        start_at: slot.start_at,
+        end_at: slot.end_at,
+        opponent_user_id: slot.opponent_user_id,
+        user_name: user.username,
+        opponent_user_name: opponent_user.username,
+    })
 }
 
 pub async fn get_future_claimed_slots(

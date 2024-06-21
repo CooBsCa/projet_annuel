@@ -11,19 +11,8 @@ pub struct SlotDto {
     pub start_at: NaiveDateTime,
     pub end_at: NaiveDateTime,
     pub opponent_user_id: i32,
-}
-
-impl From<slot::Model> for SlotDto {
-    fn from(value: slot::Model) -> Self {
-        SlotDto {
-            id: value.id,
-            user_id: value.user_id,
-            zone_id: value.zone_id,
-            start_at: value.start_at,
-            end_at: value.end_at,
-            opponent_user_id: value.opponent_user_id,
-        }
-    }
+    pub user_name: String,
+    pub opponent_user_name: String,
 }
 
 #[derive(Serialize, Deserialize, ToSchema)]

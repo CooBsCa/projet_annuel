@@ -61,19 +61,12 @@ onMounted(() => {
     date_txt.value = startDate.toLocaleDateString("fr-FR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     start_at_txt.value = startDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
     end_at_txt.value = endDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
-    getOpponentName(reservation.opponent_user_id);
+    getOpponentName(reservation.opponent_user_name);
 });
 
 
-const getOpponentName = async (opponent_user_id) => {
-    const response = await apiGet('/user/' + opponent_user_id, {
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
-    const data = await response.json();
-    console.log(data);
-    opponentName.value = capitalizeFirstLetter(data.username);
+const getOpponentName = async (user_name) => {
+    opponentName.value = capitalizeFirstLetter(user_name);
 };
 
 const capitalizeFirstLetter = (string) => {
