@@ -75,7 +75,7 @@ const getZones = async () => {
     slots.forEach(element => {
         element.zone_name = zones.find(zone => zone.id === element.zone_id).name
     });
-    slots.sort((a, b) => b.start_at - a.start_at)
+    slots.sort((a, b) => new Date(b.start_at) - new Date(a.start_at))
     claimedSlots.value = slots
 };
 const getClaimedSlots = async () => {

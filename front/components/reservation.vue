@@ -7,7 +7,7 @@
             <h2 class="card-title">{{ reservation.zone_name }}</h2>
             <p>{{ date_txt }}</p>
             <p>{{ start_at_txt }} - {{ end_at_txt }}</p>
-            <p>Partie avec {{ opponentName }}</p>
+            <p>{{ username + " - " + opponentName }}</p>
             <div class="card-actions justify-end" v-if="!isPast">
                 <button class="btn btn-accent text-accent-content" @click="modaleDelete">Annuler</button>
             </div>
@@ -26,6 +26,7 @@ import { defineEmits } from 'vue';
 const emit = defineEmits(['delete']);
 const authStore = useAuthStore();
 const authToken = authStore.getToken();
+const username = authStore.getUsername();
 const opponentName = ref('');
 const props = defineProps({
     reservation: Object,

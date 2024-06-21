@@ -10,6 +10,7 @@ use entity::slot;
 use entity::zone;
 use sea_orm::ActiveModelTrait;
 use sea_orm::ColumnTrait;
+use sea_orm::Condition;
 use sea_orm::EntityTrait;
 use sea_orm::PaginatorTrait;
 use sea_orm::QueryFilter;
@@ -52,7 +53,11 @@ pub fn is_slot_available(claimed_slots: &[slot::Model], slot: &CreateSlotDto) ->
 
 pub async fn get_claimed_slots(db: &DbConn, user_id: i32) -> Result<Vec<slot::Model>, DbErr> {
     slot::Entity::find()
-        .filter(slot::Column::UserId.eq(user_id))
+        .filter(
+            Condition::any()
+                .add(slot::Column::UserId.eq(user_id))
+                .add(slot::Column::OpponentUserId.eq(user_id)),
+        )
         .all(db)
         .await
 }
@@ -75,7 +80,11 @@ pub async fn get_future_claimed_slots(
     user_id: i32,
 ) -> Result<Vec<slot::Model>, DbErr> {
     slot::Entity::find()
-        .filter(slot::Column::UserId.eq(user_id))
+        .filter(
+            Condition::any()
+                .add(slot::Column::UserId.eq(user_id))
+                .add(slot::Column::OpponentUserId.eq(user_id)),
+        )
         .filter(slot::Column::StartAt.gt(chrono::Utc::now().naive_utc()))
         .all(db)
         .await
@@ -83,7 +92,11 @@ pub async fn get_future_claimed_slots(
 
 pub async fn count_past_claimed_slots(db: &DbConn, user_id: i32) -> Result<u64, DbErr> {
     slot::Entity::find()
-        .filter(slot::Column::UserId.eq(user_id))
+        .filter(
+            Condition::any()
+                .add(slot::Column::UserId.eq(user_id))
+                .add(slot::Column::OpponentUserId.eq(user_id)),
+        )
         .filter(slot::Column::StartAt.lt(chrono::Utc::now().naive_utc()))
         .count(db)
         .await
