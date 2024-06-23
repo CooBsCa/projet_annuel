@@ -42,8 +42,13 @@
 
                 </ul>
             </div>
-            <nuxt-link to="/home" class="absolute bottom-0 mb-4 ml-4 text-2xl bg-transparent border-none">
+            <nuxt-link to="/home"
+                class="absolute bottom-0 mb-4 ml-4 text-2xl bg-transparent border-none flex items-center">
                 <div class="imgLogout"></div>
+            </nuxt-link>
+            <nuxt-link to="/profil"
+                class="absolute bottom-0 left-48 mb-4 ml-4 text-2xl bg-transparent border-none flex items-center">
+                <div class="imgParameters"></div>
             </nuxt-link>
         </div>
 
@@ -133,6 +138,13 @@ export default {
 <style>
 .imgLogout {
     background-image: url('../../images/Logout.png');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+}
+
+.imgParameters {
+    background-image: url('../../images/parameters.png');
     background-size: cover;
     width: 25px;
     height: 25px;

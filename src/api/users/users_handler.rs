@@ -1,4 +1,7 @@
-use crate::{dto::app_user::AppUserDto, services::users_services};
+use crate::{
+    api::api_error::ApiError, dto::app_user::AppUserDto, dto::app_user::UpdateEmailDto,
+    services::users_services,
+};
 use axum::{
     extract::{Path, State},
     Extension, Json,
@@ -54,4 +57,24 @@ pub async fn get_user_by_id(State(db): State<DbConn>, Path(id): Path<i32>) -> Js
 /// Get current user
 pub async fn get_current_user(Extension(user): Extension<AppUserDto>) -> Json<AppUserDto> {
     Json(user)
+}
+
+#[utoipa::path(
+    put,
+    path = "/user-email",
+    responses(
+        (status = OK, description = "Updated user", body = UpdateEmailDto),
+    ),
+    tag = "User",
+)]
+/// Update a user
+pub async fn update_user_email(
+    State(db): State<DbConn>,
+    Json(data): Json<UpdateEmailDto>,
+) -> Result<Json<AppUserDto>, ApiError> {
+    let user: Result<entity::app_user::Model, ApiError> =
+        crate::services::users_services::update_user_email(&db, data)
+            .await
+            .map_err(|_| ApiError::Internal);
+    Ok(Json(user?.into()))
 }

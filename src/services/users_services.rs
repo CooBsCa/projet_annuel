@@ -12,7 +12,7 @@ use sea_orm::QueryFilter;
 use sea_orm::{ActiveModelTrait, TryIntoModel};
 use sea_orm::{DbConn, EntityTrait, Set};
 
-use crate::dto::app_user::{CreateUserDto, LoginUserDto};
+use crate::dto::app_user::{AppUserDto, CreateUserDto, LoginUserDto, UpdateEmailDto};
 use crate::dto::session::SessionUuidDto;
 use crate::services::session_services;
 
@@ -126,4 +126,15 @@ pub async fn reset_password(db: &DbConn, user: app_user::Model) -> Result<String
     user.password = Set(password_hash.clone());
     user.update(db).await?;
     Ok(random_password)
+}
+
+pub async fn update_user_email(
+    db: &DbConn,
+    data: UpdateEmailDto,
+) -> Result<app_user::Model, anyhow::Error> {
+    let user = app_user::Entity::find_by_id(data.id).one(db).await?;
+    let mut user: app_user::ActiveModel = user.ok_or(anyhow::Error::msg("User not found"))?.into();
+    user.email = Set(data.email);
+    let active = user.update(db).await?;
+    Ok(active.try_into_model()?)
 }
