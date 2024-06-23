@@ -3,9 +3,7 @@
     <h1 class="text-4xl font-site">Central Court</h1>
   </header>
   <div class="flex justify-center items-center h-screen bg bg-cover">
-    <nuxt-link to="/home" class="absolute top-6 left-4 z-10">
-      <div class="imgArrowBack"></div>
-    </nuxt-link>
+
     <!-- Colonne pour le formulaire d'inscription -->
     <div class="flex justify-center items-center w-1/2">
       <div class="card p-8 shadow-xl rounded-lg w-96">
@@ -24,6 +22,24 @@
             <input type="text" placeholder="Identifiant Club" class="input w-full" v-model="id_club" required>
           </div>
           <button type="submit" class="btn btn-primary self-end">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Colonne pour le formulaire de login -->
+    <div class="flex justify-center items-center w-1/2">
+      <div class="card p-8 shadow-xl rounded-lg w-96">
+        <h2 class="text-2xl font-bold mb-4 form-title">Un petit Match ? 🏆</h2>
+        <form @submit.prevent="login" class="flex flex-col">
+          <div class="mb-4">
+            <input type="text" placeholder="Identifiant" class="input w-full" v-model="usernameLogin" required />
+          </div>
+          <div class="mb-4">
+            <input type="password" placeholder="Mot de Passe" class="input w-full" v-model="passwordLogin" required>
+          </div>
+          <router-link to="password_reset" class="forgot-password-link self-end mb-4">Mot de passe oublié
+            ?</router-link>
+          <button type="submit" class="btn btn-primary self-end">Login</button>
         </form>
       </div>
     </div>
@@ -217,12 +233,5 @@ const showErrorModal = (input) => {
 .font-site {
   font-family: 'Montserrat', sans-serif;
   color: rgba(254, 237, 107, 1);
-}
-
-.imgArrowBack {
-  background-image: url('../../images/arrow_back.png');
-  background-size: cover;
-  width: 25px;
-  height: 25px;
 }
 </style>
