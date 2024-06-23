@@ -53,3 +53,9 @@ const deleteZone = async () => {
     }
 }
 </script>
+
+<style scoped>
+.winYellow {
+    text-color: #FFD700;
+}
+</style>

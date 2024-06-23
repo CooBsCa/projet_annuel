@@ -23,7 +23,7 @@
                     Durée de réservation (en minutes)
                     <input type="number" class="input input-bordered w-full" v-model="reservation_time" required>
                 </div>
-                <button type="submit" class="btn btn-primary self-end">Créer</button>
+                <button type="submit" class="btn btn-primary text-white self-end">Créer</button>
             </form>
         </div>
         <form method="dialog" class="modal-backdrop">

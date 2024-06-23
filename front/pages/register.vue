@@ -201,7 +201,7 @@ const showErrorModal = (input) => {
 .btn-primary {
   background-color: rgba(58, 11, 125, 0.9);
   border: rgba(58, 11, 125, 0.9);
-  color: rgba(225, 96, 205, 1);
+  color: rgba(254, 237, 107, 1);
 }
 
 .forgot-password-link {

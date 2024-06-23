@@ -9,7 +9,7 @@
 
             <div class="flex flex-row justify-center gap-5"><input v-model="club.name" type="text"
                     class="input input-bordered w-full max-w-xs" /><button @click="saveClubName"
-                    class="btn btn-primary">Enregistrer</button></div>
+                    class="btn btn-primary wimYellow">Enregistrer</button></div>
         </label>
 
     </div>
@@ -60,3 +60,9 @@ const saveClubName = async () => {
 
 await getZones()
 </script>
+
+<style scoped>
+.wimYellow {
+    text-color: #FFD700;
+}
+</style>
