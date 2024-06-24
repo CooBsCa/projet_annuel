@@ -12,7 +12,9 @@ use sea_orm::QueryFilter;
 use sea_orm::{ActiveModelTrait, TryIntoModel};
 use sea_orm::{DbConn, EntityTrait, Set};
 
-use crate::dto::app_user::{AppUserDto, CreateUserDto, LoginUserDto, UpdateEmailDto};
+use crate::dto::app_user::{
+    AppUserDto, CreateUserDto, LoginUserDto, UpdateEmailDto, UpdatePasswordDto,
+};
 use crate::dto::session::SessionUuidDto;
 use crate::services::session_services;
 
@@ -135,6 +137,26 @@ pub async fn update_user_email(
     let user = app_user::Entity::find_by_id(data.id).one(db).await?;
     let mut user: app_user::ActiveModel = user.ok_or(anyhow::Error::msg("User not found"))?.into();
     user.email = Set(data.email);
+    let active = user.update(db).await?;
+    Ok(active.try_into_model()?)
+}
+
+pub async fn update_user_password(
+    db: &DbConn,
+    data: UpdatePasswordDto,
+) -> Result<app_user::Model, anyhow::Error> {
+    let search_user = app_user::Entity::find_by_id(data.id).one(db).await?;
+    let user = search_user.ok_or(DbErr::RecordNotFound(
+        "Aucun Utilisateur trouvé".to_string(),
+    ))?;
+
+    if !verify(&data.password.clone(), &user.password)? {
+        return Err(anyhow::Error::msg("Mot de passe incorrect"));
+    }
+
+    let new_hash_password = hash(data.new_password.clone(), DEFAULT_COST)?;
+    let mut user: app_user::ActiveModel = user.into();
+    user.password = Set(new_hash_password);
     let active = user.update(db).await?;
     Ok(active.try_into_model()?)
 }

@@ -33,6 +33,11 @@
     <h2 class="text-black text-2xl font-bold mb-4">{{ popUpParams.title }}</h2>
     <p class="text-black pb-5">{{ popUpParams.text }}</p>
   </Modal>
+
+  <Modal ref="alertModal" :showCancel="false">
+    <h2 class="text-black text-2xl font-bold mb-4">{{ popUpAlertParams.title }}</h2>
+    <p class="text-black pb-5">{{ popUpAlertParams.text }}</p>
+  </Modal>
 </template>
 
 <script setup>
@@ -51,6 +56,11 @@ const popUpParams = ref({
   text: "",
 });
 
+let popUpAlertParams = ref({
+  title: "",
+  text: "",
+});
+
 
 authStore.setToken("");
 
@@ -63,6 +73,7 @@ const password = ref('')
 const id_club = ref('')
 const usernameLogin = ref('')
 const passwordLogin = ref('')
+const alertModal = ref()
 
 const login = async () => {
   try {
@@ -94,6 +105,15 @@ const login = async () => {
 }
 const register = async () => {
   try {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    if (!regex.test(password.value)) {
+      showAlertModal("🚨 Mot de passe invalide", "Votre mot de passe doit comporter au moins une majuscule, un chiffre, un caractère spécial et doit respecter une longueur minimum de 8 caractères")
+      return
+    }
+    if (password.value === '') {
+      showAlertModal("🚨 Champ vide", "Veuillez renseigner un nouveau mot de passe")
+      return
+    }
     const response = await fetch('http://localhost:3001/register', {
       method: 'POST',
       headers: {
@@ -124,6 +144,13 @@ const register = async () => {
     showErrorModal("d'inscription")
   }
 }
+
+const showAlertModal = (title, data) => {
+  popUpAlertParams.value.title = title
+  popUpAlertParams.value.text = data
+  alertModal.value.show()
+}
+
 const getClub = async () => {
   try {
     const response = await apiGet("/club", {

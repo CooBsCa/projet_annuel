@@ -24,7 +24,10 @@ pub async fn send_email(db: &DbConn, mail_target: String) -> Result<(), DbErr> {
                 .to(format!("<{}>", mail_target).parse().unwrap())
                 .subject("Reinitialisation de votre mot de passe")
                 .body(String::from(format!(
-                    "Votre mot de passe à été réinitialisé, voici votre mot de passe temporaire {}",
+                    "Votre mot de passe à été réinitialisé, voici votre mot de passe temporaire : {}\n
+                    1 - Connectez vous à l'application avec celui-ci\n
+                    2 - Allez dans les paramètres de votre compte\n
+                    3 - Changez votre mot de passe\n",
                     password,
                 )))
                 .unwrap();

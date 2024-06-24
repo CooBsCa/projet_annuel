@@ -40,3 +40,10 @@ pub struct UpdateEmailDto {
     pub id: i32,
     pub email: String,
 }
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct UpdatePasswordDto {
+    pub id: i32,
+    pub password: String,
+    pub new_password: String,
+}

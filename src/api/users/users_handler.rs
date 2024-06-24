@@ -1,6 +1,6 @@
 use crate::{
     api::api_error::ApiError, dto::app_user::AppUserDto, dto::app_user::UpdateEmailDto,
-    services::users_services,
+    dto::app_user::UpdatePasswordDto, services::users_services,
 };
 use axum::{
     extract::{Path, State},
@@ -74,6 +74,26 @@ pub async fn update_user_email(
 ) -> Result<Json<AppUserDto>, ApiError> {
     let user: Result<entity::app_user::Model, ApiError> =
         crate::services::users_services::update_user_email(&db, data)
+            .await
+            .map_err(|_| ApiError::Internal);
+    Ok(Json(user?.into()))
+}
+
+#[utoipa::path(
+    put,
+    path = "/user-new-password",
+    responses(
+        (status = OK, description = "Updated user", body = UpdatePasswordDto),
+    ),
+    tag = "User",
+)]
+/// Update a user
+pub async fn update_user_password(
+    State(db): State<DbConn>,
+    Json(data): Json<UpdatePasswordDto>,
+) -> Result<Json<AppUserDto>, ApiError> {
+    let user: Result<entity::app_user::Model, ApiError> =
+        crate::services::users_services::update_user_password(&db, data)
             .await
             .map_err(|_| ApiError::Internal);
     Ok(Json(user?.into()))
