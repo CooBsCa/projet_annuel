@@ -100,8 +100,8 @@ const isAdmin = authStore.getIsAdmin()
 const totalClaimsNumber = 2;
 const futurClaimsNumber = computed(() => authStore.getFuturClaimsNumber())
 
-const level = levelStore.getLevel()
-const percentage = levelStore.getPercentage()
+const level = computed(() => levelStore.getLevel())
+const percentage = computed(() => levelStore.getPercentage())
 
 const availableClaimsNumber = computed(() => {
     return totalClaimsNumber - futurClaimsNumber.value

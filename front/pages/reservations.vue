@@ -50,8 +50,8 @@ const clubStore = useClubStore()
 const club = clubStore.getClub()
 
 const claimedSlots = ref([])
-const level = levelStore.getLevel()
-const percentage = levelStore.getPercentage()
+const level = computed(() => levelStore.getLevel())
+const percentage = computed(() => levelStore.getPercentage())
 const totalReservations = levelStore.getPastClaimsNumber()
 
 const currentMonthNumber = computed(() => {
