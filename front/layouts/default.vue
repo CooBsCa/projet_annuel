@@ -98,11 +98,14 @@ const authStore = useAuthStore()
 const username = authStore.getUsername()
 const isAdmin = authStore.getIsAdmin()
 const totalClaimsNumber = 2;
-const futurClaimsNumber = authStore.getFuturClaimsNumber()
-const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
+const futurClaimsNumber = computed(() => authStore.getFuturClaimsNumber())
 
 const level = levelStore.getLevel()
 const percentage = levelStore.getPercentage()
+
+const availableClaimsNumber = computed(() => {
+    return totalClaimsNumber - futurClaimsNumber.value
+})
 
 const claimsColor = computed(() => {
     if (availableClaimsNumber.value === 0) {
