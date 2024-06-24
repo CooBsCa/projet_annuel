@@ -13,7 +13,7 @@ use sea_orm::DbConn;
         ),
         tag = "Users",
     )]
-/// Get all users
+/// Get all users with reservations available
 pub async fn get_users(State(db): State<DbConn>) -> Json<Vec<AppUserDto>> {
     Json(
         users_services::get_users(&db)

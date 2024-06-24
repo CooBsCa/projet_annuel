@@ -22,12 +22,13 @@
         <div class="court-name">{{ zone.name }}</div>
         <span class="text-center" v-if="slots(zone).length == 0">Aucun créneau disponible</span>
         <div v-for="( slot, slotIndex ) in   slots(zone)  " :key="slotIndex"
-          :class="{ 'slot': true, 'current-hour-slot': slot.isCurrentHour, 'slotReserved text-white pointer-events-none': slot.isReserved }"
+          :class="{ 'slot': true, 'current-hour-slot': slot.isCurrentHour, 'slotReserved text-white pointer-events-none': slot.isReserved, 'slotReservedNotParticipant': !slot.isParticipant && slot.isReserved }"
           @click="handleSlotClick(slot,
         zone, index, slotIndex)" :style="{ height: slotHeight(slot.slot_duration) + 'px' }">
           <span v-if="!slot.isCurrentHour && !slot.isReserved">{{ slot.start_at }} </span>
           <span v-if="slot.isCurrentHour && !slot.isReserved">🚫 {{ slot.start_at }} 🚫</span>
-          <span v-if="slot.isReserved">{{ slot.user_name + " - " + slot.opponent_user_name }}</span>
+          <span v-if="slot.isReserved">{{ slot.user_name + " - " +
+        slot.opponent_user_name }}</span>
         </div>
         <div class="court-name">{{ zone.name }}</div>
         <div class="empty-slot" v-if="emptySlots.length > 0" v-for="  n   in   emptySlots  " :key="n"></div>
@@ -71,6 +72,7 @@ const club = clubStore.getClub()
 const date = ref(new Date());
 const zones = ref([]);
 const reservedSlots = ref([]);
+const user_name = authStore.getUsername();
 const totalClaimsNumber = 2;
 const futurClaimsNumber = authStore.getFuturClaimsNumber()
 const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
@@ -127,6 +129,10 @@ const slots = (data) => {
   for (let i = 0; i < slots.length; i++) {
     let matchingSlot = findMatching(slots[i], data);
     if (matchingSlot) {
+      if (matchingSlot.user_name == user_name || matchingSlot.opponent_user_name == user_name) {
+        slots[i].isParticipant = true;
+
+      }
       slots[i].isReserved = true;
       slots[i].user_name = capitalizeFirstLetter(matchingSlot.user_name);
       slots[i].opponent_user_name = capitalizeFirstLetter(matchingSlot.opponent_user_name);
@@ -260,6 +266,10 @@ getZones()
 
 .slotReserved {
   background-color: rgba(58, 11, 125, 0.9);
+}
+
+.slotReservedNotParticipant {
+  background-color: rgba(103, 79, 137, 0.5);
 }
 
 .day {
