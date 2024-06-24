@@ -42,8 +42,13 @@
 
                 </ul>
             </div>
-            <nuxt-link to="/home" class="absolute bottom-0 mb-4 ml-4 text-2xl bg-transparent border-none">
+            <nuxt-link to="/home"
+                class="absolute bottom-0 mb-4 ml-4 text-2xl bg-transparent border-none flex items-center">
                 <div class="imgLogout"></div>
+            </nuxt-link>
+            <nuxt-link to="/profil"
+                class="absolute bottom-0 left-48 mb-4 ml-4 text-2xl bg-transparent border-none flex items-center">
+                <div class="imgParameters"></div>
             </nuxt-link>
         </div>
 
@@ -51,9 +56,9 @@
         <div class="flex flex-col flex-1 overflow-auto">
             <!-- Header -->
             <div class="bg-primary shadow-md p-4 flex flex-row justify-between">
-                <h1 class="text-2xl font-bold">{{ club.name }}</h1>
+                <h1 class="text-2xl wimYellow font-bold">{{ club.name }}</h1>
                 <div class="flex justify-end items-center">
-                    <div class="text-xl">Réservations disponibles : </div>
+                    <div class="text-xl wimYellow">Réservations disponibles : </div>
                     <div class="badge text-xl mx-2 py-4" :class="[claimsColor]">{{ availableClaimsNumber }}
                         / {{
             totalClaimsNumber }}</div>
@@ -136,5 +141,16 @@ export default {
     background-size: cover;
     width: 25px;
     height: 25px;
+}
+
+.imgParameters {
+    background-image: url('../../images/parameters.png');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+}
+
+.wimYellow {
+    color: rgba(254, 237, 107, 1);
 }
 </style>

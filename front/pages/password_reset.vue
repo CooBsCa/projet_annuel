@@ -1,5 +1,11 @@
 <template>
+    <header class="flex justify-center items-center py-4 bg-header">
+        <h1 class="text-4xl font-site">Central Court</h1>
+    </header>
     <div class="flex justify-center items-center h-screen bg bg-cover">
+        <nuxt-link to="/home" class="absolute top-6 left-4 z-10">
+            <div class="imgArrowBack"></div>
+        </nuxt-link>
         <div class="flex justify-center w-1/2">
             <div class="card p-8 shadow-xl rounded-lg">
                 <h2 class="text-2xl font-bold mb-4 form-title">📪 Un petit trou de mémoire ?</h2>
@@ -99,5 +105,21 @@ const password_reset = async (email) => {
     color: rgba(254, 237, 107, 1);
     font-size: 14px;
     text-decoration: underline;
+}
+
+.bg-header {
+    background-color: rgba(58, 11, 125, 0.9);
+}
+
+.font-site {
+    font-family: 'Montserrat', sans-serif;
+    color: rgba(254, 237, 107, 1);
+}
+
+.imgArrowBack {
+    background-image: url('../../images/arrow_back.png');
+    background-size: cover;
+    width: 25px;
+    height: 25px;
 }
 </style>

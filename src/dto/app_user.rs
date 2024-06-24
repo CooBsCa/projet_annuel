@@ -34,3 +34,9 @@ pub struct LoginUserDto {
     pub user_login_input: String,
     pub password: String,
 }
+
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub struct UpdateEmailDto {
+    pub id: i32,
+    pub email: String,
+}

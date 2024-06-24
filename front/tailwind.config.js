@@ -8,8 +8,9 @@ export default {
     themes: [
       {
         wimbledon: {
-          "primary": "#e6c9a4",
+          "primary": "#3a0b7de6",
           "secondary": "#388564",
+          "wimYellow": "#feed6b",
           "secondary-200": "#CDE1D8",
           "accent": "#34156f",
           "neutral": "#73ce9f",

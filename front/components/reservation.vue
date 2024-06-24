@@ -3,13 +3,13 @@
     <div class="card w-96 bg-primary text-primary-content shadow-xl" :class="{
         'opacity-50': isPast
     }">
-        <div class="card-body">
-            <h2 class="card-title">{{ reservation.zone_name }}</h2>
+        <div class="card-body wimYellow">
+            <h2 class="card-title wimYellow">{{ reservation.zone_name }}</h2>
             <p>{{ date_txt }}</p>
             <p>{{ start_at_txt }} - {{ end_at_txt }}</p>
             <p>{{ username + " - " + opponentName }}</p>
-            <div class="card-actions justify-end" v-if="!isPast">
-                <button class="btn btn-accent text-accent-content" @click="modaleDelete">Annuler</button>
+            <div class="card-actions justify-end wimYellow" v-if="!isPast">
+                <button class="btn btn-secondary wimYellow" @click="modaleDelete">Annuler</button>
             </div>
         </div>
     </div>
@@ -84,3 +84,9 @@ const getAvailableClaims = async () => {
     }
 }
 </script>
+
+<style scoped>
+.winYellow {
+    text-color: #FFD700;
+}
+</style>

@@ -66,7 +66,7 @@ defineExpose({
           <button v-if="props.showCancel" value="false" class="btn" @click.prevent="cancel">
             {{ props.cancelText }}
           </button>
-          <button v-if="!props.hideConfirm" value="true" class="btn btn-primary" @click.prevent="confirm">
+          <button v-if="!props.hideConfirm" value="true" class="btn btn-primary text-white" @click.prevent="confirm">
             {{ props.confirmText }}
           </button>
         </slot>

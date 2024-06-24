@@ -1,15 +1,14 @@
 <template data-theme="wimbledon">
-  <div class="navbar">
+  <div class="navbar bg-secondary mb-5 rounded-full">
     <div class="flex-1">
-      <div class="text-bl text-lg font-bold">Terrains disponibles</div>
+      <div class="text-bl text-lg font-bold text-white pl-5">Terrains disponibles</div>
     </div>
     <div class="flex-none">
       <button @click="decrementDate" class="block left-0 m-3 text-2xl bg-transparent border-none cursor-pointer">
         <div class="img2" v-if="isPreviousAvailable()"></div>
       </button>
-      <input id="date" type="date"
-        class="block p-3 text-lg border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400 mb-4"
-        v-model="formattedDate" />
+      <input id="date" type="date" class="block p-3 text-lg border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400 mb-4
+        mt-4" v-model="formattedDate" />
       <button @click="incrementDate" class="block right-0 m-3 text-2xl bg-transparent border-none cursor-pointer">
         <div class="img1"></div>
       </button>
