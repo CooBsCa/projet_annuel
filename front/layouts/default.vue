@@ -117,9 +117,9 @@ const claimsColor = computed(() => {
     }
 })
 const paths = [
-    { name: '🗓️ Calendrier', path: '/calendar', admin: false },
-    { name: '📋 Réservations', path: '/reservations', admin: false },
-    { name: '🔓 Admin', path: '/admin', admin: true },
+    { name: '🗓️ Trouver un terrain', path: '/calendar', admin: false },
+    { name: '📋 Profil Athlète', path: '/reservations', admin: false },
+    { name: '🔓 Interface Admin', path: '/admin', admin: true },
 ].filter(path => isAdmin || !path.admin)
 </script>
 
