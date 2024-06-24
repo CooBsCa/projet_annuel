@@ -21,6 +21,9 @@
                             ?</router-link>
                         <button type="submit" class="btn btn-primary self-end">Login</button>
                     </form>
+                    <div class="divider divider-color"></div>
+                    <router-link to="register" class="register-link mb-4">Pas encore de compte ? Par ici
+                        !</router-link>
                 </div>
             </div>
         </div>
@@ -215,6 +218,12 @@ const showErrorModal = (input) => {
 }
 
 .forgot-password-link {
+    color: rgba(254, 237, 107, 1);
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.register-link {
     color: rgba(254, 237, 107, 1);
     font-size: 14px;
     text-decoration: underline;

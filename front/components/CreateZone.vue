@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-primary" onclick="CreateZoneModal.showModal()">Ajouter une zone</button>
+    <button class="btn btn-primary winYellow" onclick="CreateZoneModal.showModal()">Ajouter une zone</button>
     <dialog id="CreateZoneModal" class="modal">
         <div class="modal-box">
             <form method="dialog">
@@ -66,3 +66,9 @@ const CreateZone = async () => {
     }
 }
 </script>
+
+<style scoped>
+.winYellow {
+    text-color: #FFD700;
+}
+</style>
