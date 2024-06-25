@@ -73,8 +73,10 @@ const zones = ref([]);
 const reservedSlots = ref([]);
 const user_name = authStore.getUsername();
 const totalClaimsNumber = 2;
-const futurClaimsNumber = authStore.getFuturClaimsNumber()
-const availableClaimsNumber = ref(totalClaimsNumber - futurClaimsNumber)
+const futurClaimsNumber = computed(() => authStore.getFuturClaimsNumber())
+const availableClaimsNumber = computed(() => {
+  return totalClaimsNumber - futurClaimsNumber.value
+})
 const alertModal = ref()
 
 const capitalizeFirstLetter = (string) => {
@@ -159,6 +161,7 @@ const emptySlots = () => {
 };
 
 const handleSlotClick = (slot, court, slotIndex) => {
+  console.log(availableClaimsNumber.value)
   if (availableClaimsNumber.value === 0) {
     showAlertModal()
     return;
