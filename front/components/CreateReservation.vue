@@ -56,7 +56,7 @@ const deleteModale = ref()
 
 const popUpParams = ref({
     title: "Terrain réservé",
-    text: "Vous allez recevoir un email de confirmation. Bonne partie ! 🎾",
+    text: "Votre réservation a bien été prise en compte. Bonne partie ! 🎾",
 });
 
 const props = defineProps({

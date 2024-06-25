@@ -95,6 +95,19 @@ const login = async () => {
     authStore.setIsAdmin(res.is_admin)
     authStore.setUsername(res.username)
 
+    const responseUser = await fetch('http://localhost:3001/user', {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + res.uuid
+      }
+    });
+
+    let resUser = await responseUser.json();
+    authStore.setEmail(resUser.email)
+    authStore.setUserId(resUser.id)
+
     await getClub();
   } catch (err) {
     error.value = true
@@ -133,6 +146,19 @@ const register = async () => {
     authStore.setToken(res.uuid)
     authStore.setIsAdmin(res.is_admin)
     authStore.setUsername(res.username)
+
+    const responseUser = await fetch('http://localhost:3001/user', {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + res.uuid
+      }
+    });
+
+    let resUser = await responseUser.json();
+    authStore.setEmail(resUser.email)
+    authStore.setUserId(resUser.id)
 
 
     await getClub();
