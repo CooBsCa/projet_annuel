@@ -120,6 +120,7 @@ const paths = [
     { name: '🗓️ Trouver un terrain', path: '/calendar', admin: false },
     { name: '📋 Profil Athlète', path: '/reservations', admin: false },
     { name: '🔓 Interface Admin', path: '/admin', admin: true },
+    { name: '🎾 Actualité Matchs', path: '/tennisnews', admin: false },
 ].filter(path => isAdmin || !path.admin)
 </script>
 
