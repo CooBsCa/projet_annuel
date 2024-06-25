@@ -10,10 +10,7 @@ use crate::{
         app_user::AppUserDto,
         slot::{ClaimSlotDto, CreateSlotDto, QuerySlotDto, RequestSlotsOfDayDto, SlotDto},
     },
-    services::{
-        slot_services::{self, get_slot_dto, get_slots_dto},
-        users_services::get_user_by_id,
-    },
+    services::slot_services::{self, get_slot_dto},
 };
 
 #[utoipa::path(
@@ -52,10 +49,7 @@ pub async fn get_claimed_slots(
     let claimed_slots = slot_services::get_claimed_slots(&db, usr.id)
         .await
         .map_err(|_| ApiError::Internal)?;
-    let dtos = get_slots_dto(claimed_slots, &db)
-        .await
-        .map_err(|_| ApiError::Internal)?;
-    Ok(Json(dtos))
+    Ok(Json(claimed_slots))
 }
 
 //Get slots claimed of the day
@@ -74,10 +68,7 @@ pub async fn get_claimed_slots_by_day(
     let claimed_slots = slot_services::get_all_claimed_slots_by_day(&db, data)
         .await
         .map_err(|_| ApiError::Internal)?;
-    let dtos = get_slots_dto(claimed_slots, &db)
-        .await
-        .map_err(|_| ApiError::Internal)?;
-    Ok(Json(dtos))
+    Ok(Json(claimed_slots))
 }
 
 #[utoipa::path(

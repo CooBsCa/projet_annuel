@@ -1,9 +1,10 @@
 use chrono::NaiveDateTime;
 use entity::slot;
+use sea_orm::FromQueryResult;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-#[derive(Serialize, Deserialize, ToSchema)]
+#[derive(Serialize, Deserialize, ToSchema, FromQueryResult)]
 pub struct SlotDto {
     pub id: i32,
     pub user_id: i32,

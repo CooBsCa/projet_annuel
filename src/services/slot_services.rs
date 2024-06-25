@@ -12,10 +12,13 @@ use entity::zone;
 use sea_orm::ActiveModelTrait;
 use sea_orm::ColumnTrait;
 use sea_orm::Condition;
+use sea_orm::DbBackend;
 use sea_orm::EntityTrait;
+use sea_orm::FromQueryResult;
 use sea_orm::PaginatorTrait;
 use sea_orm::QueryFilter;
 use sea_orm::Set;
+use sea_orm::Statement;
 use sea_orm::TryIntoModel;
 use sea_orm::{DbConn, DbErr};
 
@@ -54,28 +57,47 @@ pub fn is_slot_available(claimed_slots: &[slot::Model], slot: &CreateSlotDto) ->
     true
 }
 
-pub async fn get_claimed_slots(db: &DbConn, user_id: i32) -> Result<Vec<slot::Model>, DbErr> {
-    slot::Entity::find()
-        .filter(
-            Condition::any()
-                .add(slot::Column::UserId.eq(user_id))
-                .add(slot::Column::OpponentUserId.eq(user_id)),
-        )
-        .all(db)
-        .await
+pub async fn get_claimed_slots(db: &DbConn, user_id: i32) -> Result<Vec<SlotDto>, DbErr> {
+    SlotDto::find_by_statement(Statement::from_sql_and_values(
+        DbBackend::Postgres,
+        r#"
+        SELECT slot.id, slot.user_id, slot.zone_id, slot.start_at, slot.end_at, slot.opponent_user_id, app_user.username as user_name, app_user2.username as opponent_user_name
+        FROM slot
+        JOIN app_user ON slot.user_id = app_user.id
+        JOIN app_user as app_user2 ON slot.opponent_user_id = app_user2.id
+        WHERE slot.user_id = $1 or slot.opponent_user_id = $2
+        "#,
+        [user_id.into(), user_id.into()],
+    )).all(db).await
 }
 
 pub async fn get_all_claimed_slots_by_day(
     db: &DbConn,
     data: RequestSlotsOfDayDto,
-) -> Result<Vec<slot::Model>, DbErr> {
+) -> Result<Vec<SlotDto>, DbErr> {
     // Query to get all slots for a day
     print!("on passe ici");
-    slot::Entity::find()
-        .filter(slot::Column::StartAt.gte(data.start_of_day))
-        .filter(slot::Column::StartAt.lte(data.end_of_day))
-        .all(db)
-        .await
+    // let res = slot::Entity::find()
+    //     .filter(slot::Column::StartAt.gte(data.start_of_day))
+    //     .filter(slot::Column::StartAt.lte(data.end_of_day))
+    //     .find_also_related(app_user::Entity)
+    //     .all(db)
+    //     .await;
+
+    //custom query to load the slot, the username and the opponen user name
+    let slots = SlotDto::find_by_statement(Statement::from_sql_and_values(
+        DbBackend::Postgres,
+        r#"
+        SELECT slot.id, slot.user_id, slot.zone_id, slot.start_at, slot.end_at, slot.opponent_user_id, app_user.username as user_name, app_user2.username as opponent_user_name
+        FROM slot
+        JOIN app_user ON slot.user_id = app_user.id
+        JOIN app_user as app_user2 ON slot.opponent_user_id = app_user2.id
+        WHERE slot.start_at >= $1 AND slot.start_at <= $2
+        "#,
+        [data.start_of_day.into(), data.end_of_day.into()],
+    )).all(db).await?;
+
+    Ok(slots)
 }
 
 pub async fn get_slots_dto(slots: Vec<slot::Model>, db: &DbConn) -> Result<Vec<SlotDto>, DbErr> {
